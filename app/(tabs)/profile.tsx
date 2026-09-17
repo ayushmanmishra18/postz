@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl, Modal, TextInput } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,7 +9,7 @@ import { useFollowers, useFollowing, useUserProfile } from '@/hooks/useUsers';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { PostCard } from '@/components/ui/PostCard';
-import { useFollowUser } from '@/hooks/useUsers';
+import { useFollowUser, useUpdateProfile } from '@/hooks/useUsers';
 import { useUIStore } from '@/store/uiStore';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -18,6 +18,12 @@ type ProfileTab = 'posts' | 'replies' | 'media' | 'likes';
 export default function ProfileScreen() {
   const { user: currentUser, logout } = useAuth();
   const router = useRouter();
+  const updateProfile = useUpdateProfile();
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [editName, setEditName] = React.useState('');
+  const [editBio, setEditBio] = React.useState('');
+  const [editLocation, setEditLocation] = React.useState('');
+  const [editWebsite, setEditWebsite] = React.useState('');
   const params = useLocalSearchParams<{ username?: string }>();
   const username = params.username;
   const isOwnProfile = !username || username === currentUser?.username;
@@ -64,6 +70,15 @@ export default function ProfileScreen() {
   const hasMore = activeTab === 'likes' ? hasMoreLiked : hasMorePosts;
   const isLoadingMore = activeTab === 'likes' ? isLoadingLiked : isLoadingPosts;
   const fetchMore = activeTab === 'likes' ? fetchLiked : fetchPosts;
+
+  const openEdit = () => {
+    if (!profile) return;
+    setEditName(profile.displayName || ''); setEditBio(profile.bio || ''); setEditLocation(profile.location || ''); setEditWebsite(profile.website || ''); setEditOpen(true);
+  };
+  const saveEdit = async () => {
+    await updateProfile.mutateAsync({ displayName: editName.trim(), bio: editBio.trim(), location: editLocation.trim(), website: editWebsite.trim() });
+    setEditOpen(false);
+  };
 
   const handleFollow = () => {
     if (profile && !isOwnProfile) {
@@ -316,4 +331,14 @@ export default function ProfileScreen() {
       />
     </View>
   );
+
+      <Modal visible={editOpen} animationType="slide" transparent onRequestClose={() => setEditOpen(false)}>
+        <View className={tw`flex-1 justify-end bg-black/40`}>
+          <View className={tw`bg-white dark:bg-surface-900 rounded-t-3xl p-5`}>
+            <View className={tw`flex-row items-center justify-between mb-5`}><Text className={tw`text-xl font-bold text-surface-900 dark:text-white`}>Edit profile</Text><Pressable onPress={() => setEditOpen(false)}><Ionicons name="close" size={24} color="#64748b" /></Pressable></View>
+            {[['Name', editName, setEditName], ['Bio', editBio, setEditBio], ['Location', editLocation, setEditLocation], ['Website', editWebsite, setEditWebsite]].map(([label,value,setter]: any) => <View key={label as string} className={tw`mb-3`}><Text className={tw`text-sm font-semibold text-surface-600 dark:text-surface-300 mb-1`}>{label as string}</Text><TextInput value={value as string} onChangeText={setter} placeholder={label as string} className={tw`rounded-xl border border-surface-200 dark:border-surface-700 px-4 py-3 text-surface-900 dark:text-white`} /></View>)}
+            <Button fullWidth size="lg" loading={updateProfile.isPending} onPress={saveEdit}>Save changes</Button>
+          </View>
+        </View>
+      </Modal>
 }
