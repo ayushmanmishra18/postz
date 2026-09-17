@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, FlatList } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { Post } from '@/types';
 import { PostCard } from './PostCard';
