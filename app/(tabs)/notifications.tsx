@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { View, Text, FlatList, StyleSheet, RefreshControl, Pressable } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
-import { useNotifications, useMarkAllAsRead } from '@/hooks/useNotifications';
+import { useNotifications, useMarkAllAsRead, useMarkAsRead } from '@/hooks/useNotifications';
 import { Notification } from '@/types';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
@@ -12,6 +12,7 @@ import { PostCard } from '@/components/ui/PostCard';
 export default function NotificationsScreen() {
   const { data: notificationsData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, refetch } = useNotifications();
   const { markAllAsRead } = useMarkAllAsRead();
+  const { markAsRead } = useMarkAsRead();
   const { openUserProfile } = useUIStore();
 
   const notifications = React.useMemo(() => {
@@ -82,7 +83,6 @@ export default function NotificationsScreen() {
     );
   };
 
-  const markAsRead = useMarkAllAsRead();
 
   if (isLoading && notifications.length === 0) {
     return (
