@@ -146,7 +146,7 @@ export default function NotificationsScreen() {
           )
         }
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tw`pb-20`}
+        contentContainerStyle={{ paddingBottom: 80 }}
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
