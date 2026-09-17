@@ -80,7 +80,7 @@ export default function ProfileScreen() {
 
   const handleFollow = () => {
     if (profile && !isOwnProfile) {
-      followUser.mutate({ userId: profile._id, isFollowing: profile.isFollowing });
+      followUser.mutate({ userId: profile._id, isFollowing: !!profile.isFollowing });
     }
   };
 
@@ -300,7 +300,7 @@ export default function ProfileScreen() {
         }}
         onEndReachedThreshold={0.5}
         ListEmptyComponent={
-          currentPosts.length === 0 && (
+          currentPosts.length === 0 ? (
             <View className={tw`flex-1 items-center justify-center py-12 px-4`}>
               <Ionicons name={activeTab === 'likes' ? 'heart-outline' : 'document-text-outline'} size={64} color="#a1a1aa" />
               <Text className={tw`mt-4 text-lg font-medium text-surface-600 dark:text-surface-400 text-center`}>
@@ -314,15 +314,15 @@ export default function ProfileScreen() {
                     : 'This user hasn\'t shared any thoughts yet'}
               </Text>
             </View>
-          )
+          ) : null
         }
         ListFooterComponent={
-          hasMore && (
+          hasMore ? (
             <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
               <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
               <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
             </View>
-          )
+          ) : null
         }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 80 }}
