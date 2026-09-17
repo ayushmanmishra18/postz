@@ -14,12 +14,12 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView edges={['top']} className="flex-1 bg-slate-50 dark:bg-slate-950">
-      <View className="flex-row items-center justify-between px-5 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <View className="flex-row items-center justify-between px-5 py-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <View>
           <Text className="text-xs font-bold tracking-widest text-primary-600">THOUGHTS</Text>
           <Text className="text-2xl font-bold text-slate-900 dark:text-white">Your feed</Text>
         </View>
-        <Pressable className="w-10 h-10 rounded-full bg-slate-100 items-center justify-center">
+        <Pressable className="w-11 h-11 rounded-full bg-primary-50 dark:bg-primary-900/20 items-center justify-center">
           <Ionicons name="notifications-outline" size={22} color="#334155" />
         </Pressable>
       </View>
