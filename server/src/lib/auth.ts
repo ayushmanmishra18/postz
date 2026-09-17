@@ -2,18 +2,15 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Types } from 'mongoose';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const getJwtSecret = () => process.env.JWT_SECRET || 'your-secret-key';
+const getRefreshSecret = () => process.env.JWT_REFRESH_SECRET || 'your-refresh-secret';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
-
-if (isProduction) {
-  if (!JWT_SECRET || JWT_SECRET === 'your-super-secret-jwt-key-change-in-production') {
+function assertProductionSecrets() {
+  if (process.env.NODE_ENV !== 'production') return;
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'your-super-secret-jwt-key-change-in-production' || process.env.JWT_SECRET === 'your-secret-key') {
     throw new Error('JWT_SECRET must be set in production');
   }
-  if (!JWT_REFRESH_SECRET || JWT_REFRESH_SECRET === 'your-refresh-token-secret') {
+  if (!process.env.JWT_REFRESH_SECRET || process.env.JWT_REFRESH_SECRET === 'your-refresh-token-secret' || process.env.JWT_REFRESH_SECRET === 'your-refresh-secret') {
     throw new Error('JWT_REFRESH_SECRET must be set in production');
   }
 }
@@ -25,16 +22,18 @@ export interface TokenPayload {
 }
 
 export function generateAccessToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET!, { expiresIn: JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'] });
+  assertProductionSecrets();
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as jwt.SignOptions['expiresIn'] });
 }
 
 export function generateRefreshToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_REFRESH_SECRET!, { expiresIn: JWT_REFRESH_EXPIRES_IN as jwt.SignOptions['expiresIn'] });
+  assertProductionSecrets();
+  return jwt.sign(payload, getRefreshSecret(), { expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '30d') as jwt.SignOptions['expiresIn'] });
 }
 
 export function verifyAccessToken(token: string): TokenPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET!) as TokenPayload;
+    return jwt.verify(token, getJwtSecret()) as TokenPayload;
   } catch {
     return null;
   }
@@ -42,7 +41,7 @@ export function verifyAccessToken(token: string): TokenPayload | null {
 
 export function verifyRefreshToken(token: string): TokenPayload | null {
   try {
-    return jwt.verify(token, JWT_REFRESH_SECRET!) as TokenPayload;
+    return jwt.verify(token, getRefreshSecret()) as TokenPayload;
   } catch {
     return null;
   }
