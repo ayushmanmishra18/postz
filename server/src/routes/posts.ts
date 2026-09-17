@@ -182,7 +182,8 @@ router.post('/:id/like', authMiddleware, asyncHandler(async (req: AuthRequest, r
   await post.save();
 
   if (!isLiked && post.author.toString() !== req.user._id.toString()) {
-    await Notification.create({ user: post.author, type: 'like', actor: req.user._id, post: post._id });
+    const notification = await Notification.create({ user: post.author, type: 'like', actor: req.user._id, post: post._id });
+    (req as any).io?.to(post.author.toString()).emit('notification:created', notification);
   }
 
   (req as any).io?.emit('post:liked', {
