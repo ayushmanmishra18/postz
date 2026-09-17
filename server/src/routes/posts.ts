@@ -352,7 +352,21 @@ router.get('/user/:userId', authMiddleware, asyncHandler(async (req: AuthRequest
 }));
 
 router.get('/user/:userId/liked', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
-  res.json({ success: true, data: { items: [], page: 1, limit: 10, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false } });
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 10));
+  if (!mongoose.Types.ObjectId.isValid(req.params.userId)) throw new AppError('Invalid user ID', 400);
+  const user = await User.findById(req.params.userId).select('_id');
+  if (!user) throw new AppError('User not found', 404);
+  const query: any = { likes: user._id };
+  const total = await Post.countDocuments(query);
+  const posts = await Post.find(query).populate('author', 'username displayName avatar isVerified')
+    .populate('originalPost', 'content author images').sort({ createdAt: -1 })
+    .skip((page - 1) * limit).limit(limit).lean();
+  const totalPages = Math.ceil(total / limit);
+  res.json({ success: true, data: {
+    items: posts.map(p => ({ ...p, isLiked: p.likes?.some((id:any)=>id.toString()===req.user._id.toString()), isSaved: p.saves?.some((id:any)=>id.toString()===req.user._id.toString()) })),
+    page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1
+  }});
 }));
 
 router.get('/saved', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
