@@ -26,8 +26,7 @@ router.post('/register', asyncHandler(async (req: AuthRequest, res: Response) =>
   const accessToken = generateAccessToken({ userId: user._id.toString(), email: user.email, username: user.username });
   const refreshToken = generateRefreshToken({ userId: user._id.toString(), email: user.email, username: user.username });
 
-  const userResponse = user.toObject();
-  delete userResponse.password;
+  const { password: _password, ...userResponse } = user.toObject();
 
   res.status(201).json({
     success: true,
@@ -55,8 +54,7 @@ router.post('/login', asyncHandler(async (req: AuthRequest, res: Response) => {
   const accessToken = generateAccessToken({ userId: user._id.toString(), email: user.email, username: user.username });
   const refreshToken = generateRefreshToken({ userId: user._id.toString(), email: user.email, username: user.username });
 
-  const userResponse = user.toObject();
-  delete userResponse.password;
+  const { password: _password, ...userResponse } = user.toObject();
 
   res.json({
     success: true,
