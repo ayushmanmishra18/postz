@@ -203,7 +203,7 @@ router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
   res.json({
     success: true,
     data: {
-      items: users, page: pageNumber, limit: limitNumber, total, totalPages,
+      items, page: pageNumber, limit: limitNumber, total, totalPages,
       hasNextPage: pageNumber < totalPages, hasPrevPage: pageNumber > 1,
     },
   });
