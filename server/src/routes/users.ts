@@ -142,41 +142,31 @@ router.delete('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRe
 }));
 
 router.get('/:userId/followers', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const { page = 1, limit = 20 } = req.query;
-  const user = await User.findById(req.params.userId);
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  if (!mongoose.Types.ObjectId.isValid(req.params.userId)) throw new AppError('Invalid user ID', 400);
+  const user = await User.findById(req.params.userId).select('followersCount');
   if (!user) throw new AppError('User not found', 404);
-
-  res.json({
-    success: true,
-    data: {
-      items: [],
-      page: Number(page),
-      limit: Number(limit),
-      total: user.followersCount,
-      totalPages: 0,
-      hasNextPage: false,
-      hasPrevPage: false,
-    },
-  });
+  const items = await User.find({ followers: req.params.userId })
+    .select('username displayName avatar bio isVerified followersCount followingCount lastActiveAt')
+    .sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean();
+  const total = user.followersCount;
+  const totalPages = Math.ceil(total / limit);
+  res.json({ success: true, data: { items, page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 } });
 }));
 
 router.get('/:userId/following', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const { page = 1, limit = 20 } = req.query;
-  const user = await User.findById(req.params.userId);
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  if (!mongoose.Types.ObjectId.isValid(req.params.userId)) throw new AppError('Invalid user ID', 400);
+  const user = await User.findById(req.params.userId).select('followingCount');
   if (!user) throw new AppError('User not found', 404);
-
-  res.json({
-    success: true,
-    data: {
-      items: [],
-      page: Number(page),
-      limit: Number(limit),
-      total: user.followingCount,
-      totalPages: 0,
-      hasNextPage: false,
-      hasPrevPage: false,
-    },
-  });
+  const items = await User.find({ _id: { $in: user.following || [] } })
+    .select('username displayName avatar bio isVerified followersCount followingCount lastActiveAt')
+    .sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean();
+  const total = user.followingCount;
+  const totalPages = Math.ceil(total / limit);
+  res.json({ success: true, data: { items, page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 } });
 }));
 
 router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
