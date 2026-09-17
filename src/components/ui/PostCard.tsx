@@ -6,7 +6,6 @@ import { Post } from '@/types';
 import { Avatar } from './Avatar';
 import { useLikePost, useSavePost, useDeletePost } from '@/hooks/usePosts';
 import { formatDistanceToNow } from 'date-fns';
-import { useUIStore } from '@/store/uiStore';
 import { CommentsModal } from './CommentsModal';
 import { useRouter } from 'expo-router';
 
