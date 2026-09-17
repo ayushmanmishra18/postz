@@ -197,6 +197,8 @@ router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
     User.countDocuments(filter),
   ]);
 
+  const followingIds = new Set((req.user?.following || []).map((id: any) => id.toString()));
+  const items = users.map((user: any) => ({ ...user, isFollowing: followingIds.has(user._id.toString()) }));
   const totalPages = Math.ceil(total / limitNumber);
   res.json({
     success: true,
