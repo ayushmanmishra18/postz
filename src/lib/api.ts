@@ -105,30 +105,37 @@ class ApiClient {
     await tokenStorage.remove('user');
   }
 
+  private unwrap<T>(response: any) {
+    return {
+      ...response,
+      data: response?.data?.data ?? response?.data,
+    } as typeof response & { data: T };
+  }
+
   async get<T>(url: string, config?: { params?: object }) {
-    return this.client.get<T>(url, config);
+    return this.unwrap<T>(await this.client.get(url, config));
   }
 
   async post<T>(url: string, data?: object) {
-    return this.client.post<T>(url, data);
+    return this.unwrap<T>(await this.client.post(url, data));
   }
 
   async put<T>(url: string, data?: object) {
-    return this.client.put<T>(url, data);
+    return this.unwrap<T>(await this.client.put(url, data));
   }
 
   async patch<T>(url: string, data?: object) {
-    return this.client.patch<T>(url, data);
+    return this.unwrap<T>(await this.client.patch(url, data));
   }
 
   async delete<T>(url: string) {
-    return this.client.delete<T>(url);
+    return this.unwrap<T>(await this.client.delete(url));
   }
 
   async upload<T>(url: string, formData: FormData) {
-    return this.client.post<T>(url, formData, {
+    return this.unwrap<T>(await this.client.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    }));
   }
 }
 
