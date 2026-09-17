@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -41,7 +41,7 @@ const upload = multer({
   limits: { fileSize: MAX_FILE_SIZE },
 });
 
-router.post('/image', authMiddleware, upload.single('image'), asyncHandler(async (req, res) => {
+router.post('/image', authMiddleware, upload.single('image'), asyncHandler(async (req: AuthRequest, res: Response) => {
   if (!req.file) {
     throw new AppError('No file uploaded', 400);
   }
