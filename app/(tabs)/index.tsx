@@ -1,108 +1,71 @@
 import React from 'react';
-import { View, Text, FlatList, RefreshControl, StyleSheet } from 'react-native';
-import { tw } from '@/lib/tw';
+import { View, Text, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFeed } from '@/hooks/usePosts';
 import { PostList } from '@/components/ui/PostList';
 import { CreatePostModal } from '@/components/ui/CreatePostModal';
 import { useUIStore } from '@/store/uiStore';
-import { useAuthStore } from '@/store/authStore';
-import { useAuth } from '@/hooks/useAuth';
 
 export default function HomeScreen() {
-  const { user, isAuthenticated } = useAuth();
-  const { isCreatePostOpen, closeCreatePost } = useUIStore();
-  const { data: feedData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useFeed();
-
-  const posts = React.useMemo(() => {
-    if (!feedData) return [];
-    return feedData.pages.flatMap(page => page.items);
-  }, [feedData]);
-
-  const onRefresh = React.useCallback(() => {
-    refetch();
-  }, [refetch]);
-
-  const onEndReached = React.useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  if (!isAuthenticated) {
-    return (
-      <View className={tw`flex-1 items-center justify-center px-4`}>
-        <Ionicons name="person-circle-outline" size={80} color="#71717a" />
-        <Text className={tw`mt-4 text-xl font-semibold text-surface-900 dark:text-surface-50 text-center`}>
-          Welcome to Thoughts
-        </Text>
-        <Text className={tw`mt-2 text-surface-500 dark:text-surface-400 text-center px-4`}>
-          Sign in to see thoughts from people you follow
-        </Text>
-      </View>
-    );
-  }
+  const { isCreatePostOpen, openCreatePost, closeCreatePost } = useUIStore();
+  const feed = useFeed();
+  const posts = React.useMemo(() => feed.data?.pages.flatMap(page => page.items) ?? [], [feed.data]);
 
   return (
-    <View className={tw`flex-1 bg-surface-50 dark:bg-surface-950`}>
-      <FlatList
-        data={posts.length > 0 ? [{ type: 'feed', posts }] : [{ type: 'empty' }]}
-        keyExtractor={(item) => item.type}
-        renderItem={({ item }) => {
-          if (item.type === 'empty') {
-            return (
-              <View className={tw`flex-1 items-center justify-center py-12 px-4`}>
-                <Ionicons name="person-add-outline" size={64} color="#a1a1aa" />
-                <Text className={tw`mt-4 text-lg font-medium text-surface-600 dark:text-surface-400 text-center`}>
-                  No thoughts yet
-                </Text>
-                <Text className={tw`mt-2 text-surface-500 dark:text-surface-400 text-center px-4`}>
-                  Follow some people to see their thoughts here
-                </Text>
-              </View>
-            );
-          }
-          return (
-            <PostList
-              posts={item.posts}
-              onEndReached={onEndReached}
-              onRefresh={onRefresh}
-              refreshing={isLoading}
-              hasMore={hasNextPage}
-            />
-          );
-        }}
-        ListHeaderComponent={
-          posts.length === 0 ? null : (
-            <View className={tw`px-4 py-3 border-b border-surface-200 dark:border-surface-700`}>
-              <Text className={tw`text-xl font-bold text-surface-900 dark:text-surface-50`}>Home</Text>
-            </View>
-          )
-        }
-        ListFooterComponent={
-          hasNextPage && (
-            <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
-              {isFetchingNextPage && (
-                <>
-                  <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
-                  <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
-                </>
-              )}
-            </View>
-          )
-        }
-        contentContainerStyle={tw`pb-20`}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={isLoading}
-            onRefresh={onRefresh}
-            colors={['#0ea5e9']}
+    <SafeAreaView edges={['top']} className="flex-1 bg-slate-50 dark:bg-slate-950">
+      <View className="flex-row items-center justify-between px-5 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <View>
+          <Text className="text-xs font-bold tracking-widest text-primary-600">THOUGHTS</Text>
+          <Text className="text-2xl font-bold text-slate-900 dark:text-white">Your feed</Text>
+        </View>
+        <Pressable className="w-10 h-10 rounded-full bg-slate-100 items-center justify-center">
+          <Ionicons name="notifications-outline" size={22} color="#334155" />
+        </Pressable>
+      </View>
+
+      <View className="flex-1">
+        {feed.isError ? (
+          <View className="flex-1 items-center justify-center px-8">
+            <Ionicons name="cloud-offline-outline" size={42} color="#ef4444" />
+            <Text className="mt-4 text-xl font-bold text-slate-900 dark:text-white">Couldn't load your feed</Text>
+            <Text className="mt-2 text-center text-slate-500">Check your connection and try again.</Text>
+            <Pressable onPress={() => feed.refetch()} className="mt-5 rounded-xl bg-primary-600 px-5 py-3">
+              <Text className="font-semibold text-white">Try again</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <PostList
+            posts={posts}
+            refreshing={feed.isRefetching}
+            onRefresh={() => feed.refetch()}
+            onEndReached={() => { if (feed.hasNextPage && !feed.isFetchingNextPage) feed.fetchNextPage(); }}
+            hasMore={!!feed.hasNextPage}
+            ListEmptyComponent={
+              !feed.isLoading ? (
+                <View className="items-center px-8 py-20">
+                  <View className="w-20 h-20 rounded-3xl bg-primary-50 items-center justify-center">
+                    <Ionicons name="sparkles-outline" size={38} color="#0284c7" />
+                  </View>
+                  <Text className="mt-5 text-xl font-bold text-slate-900 dark:text-white">Your feed is quiet</Text>
+                  <Text className="mt-2 text-center text-slate-500">Follow people or share your first thought to get the conversation started.</Text>
+                  <Pressable onPress={openCreatePost} className="mt-5 rounded-xl bg-primary-600 px-5 py-3">
+                    <Text className="font-semibold text-white">Share a thought</Text>
+                  </Pressable>
+                </View>
+              ) : undefined
+            }
           />
-        }
-      />
+        )}
+      </View>
+
+      <Pressable onPress={openCreatePost} accessibilityRole="button" accessibilityLabel="Create a new thought"
+        className="absolute right-5 bottom-6 w-14 h-14 rounded-full bg-primary-600 items-center justify-center shadow-lg"
+        style={{ elevation: 6 }}>
+        <Ionicons name="add" size={30} color="white" />
+      </Pressable>
 
       <CreatePostModal isOpen={isCreatePostOpen} onClose={closeCreatePost} />
-    </View>
+    </SafeAreaView>
   );
 }
