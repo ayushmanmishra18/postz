@@ -1,18 +1,12 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken, hashPassword, comparePassword, generateResetToken } from '../lib/auth';
+import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, hashPassword, comparePassword, generateResetToken } from '../lib/auth';
 import { AuthRequest } from '../middleware/auth';
 import { Response } from 'express';
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
-
 router.post('/register', asyncHandler(async (req: AuthRequest, res: Response) => {
   const { username, email, password, displayName } = req.body;
 
@@ -111,7 +105,8 @@ router.get('/me', asyncHandler(async (req: AuthRequest, res: Response) => {
   }
 
   const token = authHeader.split(' ')[1];
-  const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+  const decoded = verifyAccessToken(token);
+  if (!decoded) throw new AppError('Invalid token', 401);
 
   const user = await User.findById(decoded.userId);
   if (!user) {
