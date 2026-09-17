@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Post from '../models/Post';
 import User from '../models/User';
+import Notification from '../models/Notification';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import mongoose from 'mongoose';
@@ -179,6 +180,10 @@ router.post('/:id/like', authMiddleware, asyncHandler(async (req: AuthRequest, r
   }
 
   await post.save();
+
+  if (!isLiked && post.author.toString() !== req.user._id.toString()) {
+    await Notification.create({ user: post.author, type: 'like', actor: req.user._id, post: post._id });
+  }
 
   (req as any).io?.emit('post:liked', {
     postId: post._id,
