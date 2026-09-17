@@ -14,7 +14,7 @@ export default function SearchScreen() {
   const [query, setQuery] = React.useState('');
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
   const router = useRouter();
-  const { followUser } = useFollowUser();
+  const followUser = useFollowUser();
   const { data: suggestions } = useUserSuggestions();
   const { data: searchData, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useSearchUsers(debouncedQuery);
 
