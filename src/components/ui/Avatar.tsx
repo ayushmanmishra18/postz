@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, StyleSheet } from 'react-native';
+import { Image, View, Text } from 'react-native';
 import { tw } from '@/lib/tw';
 
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof View> {
@@ -75,9 +75,7 @@ export const Avatar = React.forwardRef<View, AvatarProps>(
           />
         ) : (
           <View className={tw`${sizeClass} ${shapeClass} ${bgColor} items-center justify-center flex-shrink-0`}>
-            <View className={tw`text-white font-medium`}>
-              {name ? getInitials(name) : '?'}
-            </View>
+            <Text className={tw`text-white font-semibold`}>{name ? getInitials(name) : '?'}</Text>
           </View>
         )}
         {status && (
