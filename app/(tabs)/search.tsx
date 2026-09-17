@@ -9,13 +9,11 @@ import { Button } from '@/components/ui/Button';
 import { useFollowUser } from '@/hooks/useUsers';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUIStore } from '@/store/uiStore';
 
 export default function SearchScreen() {
   const [query, setQuery] = React.useState('');
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
   const router = useRouter();
-  const { openUserProfile } = useUIStore();
   const { followUser } = useFollowUser();
   const { data: suggestions } = useUserSuggestions();
   const { data: searchData, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useSearchUsers(debouncedQuery);
@@ -76,7 +74,6 @@ export default function SearchScreen() {
             placeholder="Search users..."
             value={query}
             onChangeText={setQuery}
-            className={tw`bg-white dark:bg-surface-900 border-2 border-surface-200 dark:border-surface-700 rounded-xl px-4 py-3 text-surface-900 dark:text-surface-50 placeholder:text-surface-400`}
             placeholderTextColor="#a1a1aa"
             autoFocus
             className={tw`flex-1 px-3 py-3 text-surface-900 dark:text-surface-50`}
