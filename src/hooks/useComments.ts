@@ -103,7 +103,7 @@ export function useDeleteComment() {
   return useMutation({
     mutationFn: (commentId: string) => commentsApi.deleteComment(commentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.posts.comments('') });
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts.all });
       Toast.show({ type: 'success', text1: 'Comment deleted' });
     },
     onError: () => {
