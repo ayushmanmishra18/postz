@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { tw } from '@/lib/tw';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
@@ -60,18 +59,18 @@ export default function SignupScreen() {
   };
 
   return (
-    <View className={tw`flex-1 bg-slate-50 dark:bg-slate-950`}>
-      <View className={tw`flex-1 p-6 justify-center`}>
-        <View className={tw`max-w-md mx-auto w-full`}>
-          <View className={tw`text-center mb-10`}>
-            <View className={tw`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 mb-4`}>
+    <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+      <View className="flex-1 p-6 justify-center">
+        <View className="max-w-md mx-auto w-full">
+          <View className="text-center mb-10">
+            <View className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 mb-4">
               <Ionicons name="chatbubbles" size={36} color="white" />
             </View>
-            <Text className={tw`text-3xl font-bold text-surface-900 dark:text-surface-50`}>Create account</Text>
-            <Text className={tw`mt-2 text-surface-500 dark:text-surface-400`}>Join Thoughts and share your ideas</Text>
+            <Text className="text-3xl font-bold text-surface-900 dark:text-surface-50">Create account</Text>
+            <Text className="mt-2 text-surface-500 dark:text-surface-400">Join Thoughts and share your ideas</Text>
           </View>
 
-          <View className={tw`space-y-4`}>
+          <View className="space-y-4">
             <Input
               label="Display Name"
               value={formData.displayName}
@@ -88,7 +87,7 @@ export default function SignupScreen() {
               placeholder="@username"
               error={errors.username}
               autoCapitalize="none"
-              leftIcon={<Text className={tw`text-surface-400`}>@</Text>}
+              leftIcon={<Text className="text-surface-400">@</Text>}
             />
 
             <Input
@@ -110,7 +109,7 @@ export default function SignupScreen() {
               error={errors.password}
               secureTextEntry={!showPassword}
               rightIcon={
-                <Pressable onPress={() => setShowPassword(!showPassword)} className={tw`p-2`}>
+                <Pressable onPress={() => setShowPassword(!showPassword)} className="p-2">
                   <Ionicons
                     name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                     size={22}
@@ -137,16 +136,16 @@ export default function SignupScreen() {
               disabled={isLoading}
               fullWidth
               size="lg"
-              className={tw`mt-2`}
+              className="mt-2"
             >
               {isLoading ? 'Creating account...' : 'Create Account'}
             </Button>
           </View>
 
-          <View className={tw`mt-8 flex-row items-center justify-center`}>
-            <Text className={tw`text-surface-500 dark:text-surface-400`}>Already have an account?</Text>
-            <Pressable onPress={() => router.push('/login')} className={tw`ml-1 px-1 py-1`}>
-              <Text className={tw`text-primary-600 dark:text-primary-400 font-semibold`}>Sign in</Text>
+          <View className="mt-8 flex-row items-center justify-center">
+            <Text className="text-surface-500 dark:text-surface-400">Already have an account?</Text>
+            <Pressable onPress={() => router.push('/login')} className="ml-1 px-1 py-1">
+              <Text className="text-primary-600 dark:text-primary-400 font-semibold">Sign in</Text>
             </Pressable>
           </View>
         </View>
