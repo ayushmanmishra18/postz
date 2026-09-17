@@ -75,7 +75,7 @@ export const postsApi = {
         type: 'image/jpeg',
       } as any);
     });
-    const response = await api.upload<{ urls: string[] }>('/posts/upload', formData);
+    const response = await api.upload<{ urls: string[] }>('/upload/images', formData);
     return response.data.urls;
   },
 };
