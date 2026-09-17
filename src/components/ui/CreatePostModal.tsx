@@ -66,7 +66,7 @@ export function CreatePostModal({ isOpen, onClose, initialContent = '', initialI
     if (images.length >= 4) return;
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
       quality: 0.8,
