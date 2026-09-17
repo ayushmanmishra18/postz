@@ -78,7 +78,6 @@ export function PostList({
           </View>
         )
       }
-      contentContainerStyle={tw`${className}`}
       showsVerticalScrollIndicator={false}
     />
   );
