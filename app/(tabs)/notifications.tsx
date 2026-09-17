@@ -1,19 +1,20 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, RefreshControl, Pressable } from 'react-native';
+import { View, Text, FlatList, RefreshControl, Pressable } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useNotifications, useMarkAllAsRead, useMarkAsRead } from '@/hooks/useNotifications';
 import { Notification } from '@/types';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
-import { useUIStore } from '@/store/uiStore';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { PostCard } from '@/components/ui/PostCard';
 
 export default function NotificationsScreen() {
   const { data: notificationsData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, refetch } = useNotifications();
   const { markAllAsRead } = useMarkAllAsRead();
   const { markAsRead } = useMarkAsRead();
-  const { openUserProfile } = useUIStore();
+  const router = useRouter();
 
   const notifications = React.useMemo(() => {
     if (!notificationsData) return [];
@@ -54,7 +55,7 @@ export default function NotificationsScreen() {
     return (
       <Pressable
         onPress={() => {
-          if (actor) openUserProfile(actor);
+          if (actor?.username) router.push({ pathname: '/(tabs)/profile', params: { username: actor.username } });
           if (!notification.isRead) {
             markAsRead.mutate(notification._id);
           }
@@ -107,7 +108,11 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <View className={tw`flex-1 bg-surface-50 dark:bg-surface-950`}>
+    <SafeAreaView edges={['top']} className={tw`flex-1 bg-slate-50 dark:bg-slate-950`}>
+      <View className={tw`flex-row items-center justify-between px-5 py-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800`}>
+        <View><Text className={tw`text-2xl font-bold text-slate-900 dark:text-white`}>Notifications</Text><Text className={tw`text-xs text-surface-500 mt-1`}>{notifications.filter(n => !n.isRead).length} unread</Text></View>
+        <Pressable onPress={() => markAllAsRead()} className={tw`px-3 py-2 rounded-xl bg-primary-50`}><Text className={tw`text-sm font-semibold text-primary-700`}>Mark all read</Text></Pressable>
+      </View>
       <FlatList
         data={Object.entries(groupedNotifications)}
         keyExtractor={([date]) => date}
@@ -150,6 +155,6 @@ export default function NotificationsScreen() {
           />
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }
