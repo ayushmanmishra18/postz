@@ -57,7 +57,7 @@ export function PostList({
       data={posts}
       keyExtractor={keyExtractor}
       renderItem={({ item }) => (
-        renderItem?.(item) || (
+        renderItem ? renderItem(item) : (
           <PostCard
             post={item}
             onPress={() => onPress?.(item)}
@@ -71,12 +71,12 @@ export function PostList({
       onRefresh={onRefresh}
       refreshing={refreshing}
       ListFooterComponent={
-        hasMore && (
+        hasMore ? (
           <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
             <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
             <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
           </View>
-        )
+        ) : null
       }
       showsVerticalScrollIndicator={false}
     />
