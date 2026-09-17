@@ -11,7 +11,7 @@ interface PostListProps {
   onRefresh?: () => void;
   refreshing?: boolean;
   hasMore?: boolean;
-  renderItem?: (post: Post) => React.ReactNode;
+  renderItem?: (post: Post) => React.ReactElement | null;
   keyExtractor?: (post: Post) => string;
   ListEmptyComponent?: React.ReactNode;
   className?: string;
