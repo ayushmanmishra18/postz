@@ -1,74 +1,33 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
+import { ActivityIndicator, View } from 'react-native';
+import { Redirect, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/store/authStore';
 
-function TabIcon({
-  name,
-  focused,
-  color,
-}: {
-  name: string;
-  focused: boolean;
-  color: string;
-}) {
-  return (
-    <Ionicons
-      name={focused ? name : `${name}-outline`}
-      size={24}
-      color={color}
-    />
-  );
+type IconName = keyof typeof Ionicons.glyphMap;
+
+function TabIcon({ name, focused, color }: { name: IconName; focused: boolean; color: string }) {
+  const outline = (name + '-outline') as IconName;
+  return <Ionicons name={focused ? name : outline} size={23} color={color} />;
 }
 
 export default function TabLayout() {
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: '#0ea5e9',
-        tabBarInactiveTintColor: '#71717a',
-        tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopWidth: 0,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon name="home" focused={focused} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon name="search" focused={focused} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              name="notifications"
-              focused={focused}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <TabIcon name="person" focused={focused} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+  const { isAuthenticated } = useAuth();
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  if (!hasHydrated) return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator color="#0ea5e9" /></View>;
+  if (!isAuthenticated) return <Redirect href="/(auth)/login" />;
+
+  return <Tabs screenOptions={{
+    headerShown: false,
+    tabBarActiveTintColor: '#0284c7',
+    tabBarInactiveTintColor: '#94a3b8',
+    tabBarStyle: { height: 64, paddingTop: 8, paddingBottom: 8, borderTopWidth: 1, borderTopColor: '#e2e8f0', backgroundColor: '#ffffff' },
+    tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+  }}>
+    <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({focused,color}) => <TabIcon name="home" focused={focused} color={color}/> }} />
+    <Tabs.Screen name="search" options={{ title: 'Discover', tabBarIcon: ({focused,color}) => <TabIcon name="search" focused={focused} color={color}/> }} />
+    <Tabs.Screen name="notifications" options={{ title: 'Alerts', tabBarIcon: ({focused,color}) => <TabIcon name="notifications" focused={focused} color={color}/> }} />
+    <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({focused,color}) => <TabIcon name="person" focused={focused} color={color}/> }} />
+  </Tabs>;
 }
