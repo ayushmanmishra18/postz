@@ -94,9 +94,7 @@ export default function LoginScreen() {
                 </Text>
               </Pressable>
 
-              <Pressable
-                onPress={() => router.push('/signup')}
-              >
+              <Pressable onPress={() => {}}>
                 <Text className="text-sm text-primary-600 dark:text-primary-400 font-medium">
                   Forgot password?
                 </Text>
