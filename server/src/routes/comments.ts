@@ -98,6 +98,21 @@ router.post('/post/:postId', authMiddleware, asyncHandler(async (req: AuthReques
   res.status(201).json({ success: true, data: populatedComment, message: 'Comment added' });
 }));
 
+router.get('/:id/replies', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new AppError('Invalid comment ID', 400);
+  const parent = await Comment.findById(id).select('_id');
+  if (!parent) throw new AppError('Comment not found', 404);
+  const total = await Comment.countDocuments({ parentComment: id });
+  const items = await Comment.find({ parentComment: id })
+    .populate('author', 'username displayName avatar isVerified')
+    .sort({ createdAt: 1 }).skip((page - 1) * limit).limit(limit).lean();
+  const totalPages = Math.ceil(total / limit);
+  res.json({ success: true, data: { items, page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 } });
+}));
+
 router.patch('/:id', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     throw new AppError('Invalid comment ID', 400);
