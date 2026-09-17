@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPosts, useLikedPosts } from '@/hooks/usePosts';
