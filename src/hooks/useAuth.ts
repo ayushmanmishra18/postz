@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 import { authApi } from '@/api/auth';
 import { usersApi } from '@/api/users';
 import { queryKeys } from '@/lib/queryClient';
@@ -10,12 +11,19 @@ export function useAuth() {
   const { user, isAuthenticated, isLoading, setAuth, logout, updateUser, setLoading } = useAuthStore();
   const queryClient = useQueryClient();
 
-  const { data: me, refetch } = useQuery({
+  const { data: me, refetch, error: meError } = useQuery({
     queryKey: queryKeys.auth.me,
     queryFn: authApi.me,
     enabled: isAuthenticated && !!user,
     staleTime: 1000 * 60 * 10,
   });
+
+  React.useEffect(() => {
+    if (isAuthenticated && meError && (meError as any)?.response?.status === 401) {
+      logout();
+      queryClient.removeQueries({ queryKey: queryKeys.auth.me });
+    }
+  }, [isAuthenticated, meError, logout, queryClient]);
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
