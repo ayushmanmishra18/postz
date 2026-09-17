@@ -28,7 +28,3 @@ declare module 'react-native' {
   }
 }
 
-declare module 'nativewind' {
-  export function tw(strings: TemplateStringsArray, ...values: any[]): string;
-  export function tw(str: string): string;
-}
