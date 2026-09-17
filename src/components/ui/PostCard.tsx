@@ -29,9 +29,9 @@ export function PostCard({
   showFullContent = false,
   isCompact = false,
 }: PostCardProps) {
-  const { likePost } = useLikePost();
-  const { savePost } = useSavePost();
-  const { deletePost } = useDeletePost();
+  const likePost = useLikePost();
+  const savePost = useSavePost();
+  const deletePost = useDeletePost();
   const { openCommentSheet, openUserProfile } = useUIStore();
 
   const author = post.author as any;
