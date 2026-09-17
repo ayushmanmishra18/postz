@@ -9,7 +9,7 @@ export function useComments(postId: string, enabled = true) {
     queryKey: queryKeys.posts.comments(postId),
     queryFn: ({ pageParam }) => commentsApi.getComments(postId, { cursor: pageParam }),
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.items[lastPage.items.length - 1]?._id : undefined,
-    initialPageParam: undefined,
+    initialPageParam: undefined as string | undefined,
     enabled: enabled && !!postId,
     staleTime: 1000 * 60 * 1,
   });
