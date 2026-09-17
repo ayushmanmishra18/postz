@@ -263,7 +263,7 @@ export default function ProfileScreen() {
             }}
             onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={tw`pb-20`}
+            contentContainerStyle={{ paddingBottom: 80 }}
           />
         </View>
       )}
@@ -286,7 +286,7 @@ export default function ProfileScreen() {
             }}
             onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={tw`pb-20`}
+            contentContainerStyle={{ paddingBottom: 80 }}
           />
         </View>
       )}
@@ -327,7 +327,7 @@ export default function ProfileScreen() {
           )
         }
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tw`pb-20`}
+        contentContainerStyle={{ paddingBottom: 80 }}
       />
       <Modal visible={editOpen} animationType="slide" transparent onRequestClose={() => setEditOpen(false)}>
         <View className={tw`flex-1 justify-end bg-black/40`}>
