@@ -123,6 +123,7 @@ router.delete('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRe
 
   currentUser.following = currentUser.following.filter((id: any) => id.toString() !== targetUserId);
   currentUser.followingCount = Math.max(0, currentUser.followingCount - 1);
+  targetUser.followers = (targetUser.followers || []).filter((id: any) => id.toString() !== req.user._id.toString());
   targetUser.followersCount = Math.max(0, targetUser.followersCount - 1);
 
   await Promise.all([currentUser.save(), targetUser.save()]);
