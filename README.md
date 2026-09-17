@@ -8,6 +8,32 @@
 ![Database](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)
 ![Language](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript)
 
+## 🚀 Current Project Status
+
+The current codebase targets **Expo SDK 50** with React Native Web and Expo Router.
+
+### Startup & Web Stability
+
+- Root routing uses Expo Router route groups: `(auth)` and `(tabs)`.
+- Authentication state is persisted with Zustand and the root navigator waits for persistence hydration before rendering the application routes.
+- TanStack Query is provided at the application root through a shared QueryClient.
+- Metro uses Expo's standard configuration.
+- NativeWind styling is supported through Tailwind classes and a local `tw` compatibility helper for existing template-string class usage.
+- A root redirect route sends signed-out users to login and authenticated users to the main tab area.
+- The web build can be started with `npx expo start -c` followed by **w**.
+
+### Recommended local verification
+
+```powershell
+npm install
+npx expo install --fix
+npm run typecheck
+npx expo start -c
+```
+
+If Web loads as a blank page, check the **first** browser-console error and the Expo terminal output before changing dependencies. Avoid mixing package versions from different Expo SDK releases.
+
+
 ---
 
 ## 📋 Table of Contents
