@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text } from 'react-native';
+import { Image, View, Text, ImageSourcePropType } from 'react-native';
 import { tw } from '@/lib/tw';
 
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof View> {
@@ -69,7 +69,7 @@ export const Avatar = React.forwardRef<View, AvatarProps>(
       <View ref={ref} className={tw`relative inline-flex ${className}`} style={style} {...props}>
         {source ? (
           <Image
-            source={source}
+            source={typeof source === 'string' ? { uri: source } : source as ImageSourcePropType}
             className={tw`${sizeClass} ${shapeClass} bg-cover`}
             style={{ borderRadius: shape === 'circle' ? 9999 : 12 }}
           />
