@@ -24,7 +24,7 @@ export const usersApi = {
       name: 'avatar.jpg',
       type: 'image/jpeg',
     } as any);
-    const response = await api.upload<{ avatar: string }>('/users/me/avatar', formData);
+    const response = await api.upload<{ avatar: string }>('/upload/avatar', formData);
     return response.data;
   },
 
@@ -35,7 +35,7 @@ export const usersApi = {
       name: 'cover.jpg',
       type: 'image/jpeg',
     } as any);
-    const response = await api.upload<{ coverImage: string }>('/users/me/cover', formData);
+    const response = await api.upload<{ coverImage: string }>('/upload/cover', formData);
     return response.data;
   },
 
