@@ -65,17 +65,19 @@ router.post('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRequ
   if (!targetUser) throw new AppError('User not found', 404);
 
   const currentUser = await User.findById(req.user._id);
-  const isFollowing = currentUser.following?.includes(targetUserId);
+  if (!currentUser) throw new AppError('User not found', 404);
+  const targetObjectId = new mongoose.Types.ObjectId(targetUserId);
+  const isFollowing = currentUser.following?.some((id) => id.equals(targetObjectId));
 
   if (isFollowing) {
-    currentUser.following = currentUser.following.filter((id: any) => id.toString() !== targetUserId);
+    currentUser.following = (currentUser.following || []).filter((id: any) => id.toString() !== targetUserId);
     targetUser.followers = (targetUser.followers || []).filter((id: any) => id.toString() !== req.user._id.toString());
     currentUser.followingCount = Math.max(0, currentUser.followingCount - 1);
     targetUser.followersCount = Math.max(0, targetUser.followersCount - 1);
   } else {
     if (!currentUser.following) currentUser.following = [];
     if (!targetUser.followers) targetUser.followers = [];
-    currentUser.following.push(targetUserId);
+    currentUser.following.push(targetObjectId);
     targetUser.followers.push(req.user._id);
     currentUser.followingCount += 1;
     targetUser.followersCount += 1;
@@ -115,13 +117,15 @@ router.delete('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRe
   if (!targetUser) throw new AppError('User not found', 404);
 
   const currentUser = await User.findById(req.user._id);
-  const isFollowing = currentUser.following?.includes(targetUserId);
+  if (!currentUser) throw new AppError('User not found', 404);
+  const targetObjectId = new mongoose.Types.ObjectId(targetUserId);
+  const isFollowing = currentUser.following?.some((id) => id.equals(targetObjectId));
 
   if (!isFollowing) {
     throw new AppError('Not following this user', 400);
   }
 
-  currentUser.following = currentUser.following.filter((id: any) => id.toString() !== targetUserId);
+  currentUser.following = (currentUser.following || []).filter((id: any) => id.toString() !== targetUserId);
   currentUser.followingCount = Math.max(0, currentUser.followingCount - 1);
   targetUser.followers = (targetUser.followers || []).filter((id: any) => id.toString() !== req.user._id.toString());
   targetUser.followersCount = Math.max(0, targetUser.followersCount - 1);
@@ -172,11 +176,12 @@ router.get('/:userId/following', asyncHandler(async (req: AuthRequest, res: Resp
 
 router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
   const { query, page = 1, limit = 20 } = req.query;
-  if (!query || (query as string).length < 2) {
+  const searchQuery = typeof query === 'string' ? query : '';
+  if (searchQuery.length < 2) {
     throw new AppError('Query must be at least 2 characters', 400);
   }
 
-  const safeQuery = String(query).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const safeQuery = searchQuery.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pageNumber = Math.max(1, Number(page) || 1);
   const limitNumber = Math.min(50, Math.max(1, Number(limit) || 20));
   const filter = {
@@ -211,6 +216,7 @@ router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
 
 router.get('/suggestions', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
   const currentUser = await User.findById(req.user._id);
+  if (!currentUser) throw new AppError('User not found', 404);
   const following = currentUser.following || [];
 
   const suggestions = await User.find({
