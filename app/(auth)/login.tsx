@@ -49,7 +49,6 @@ export default function LoginScreen() {
 
             <Input
               label="Email"
-              type="email"
               value={email}
               onChangeText={setEmail}
               placeholder="you@example.com"
@@ -60,7 +59,6 @@ export default function LoginScreen() {
 
             <Input
               label="Password"
-              type={showPassword ? 'text' : 'password'}
               value={password}
               onChangeText={setPassword}
               placeholder="••••••••"
@@ -88,7 +86,7 @@ export default function LoginScreen() {
 
               <View className="flex-row items-center gap-2"><View className="w-1.5 h-1.5 rounded-full bg-primary-500" /><Text className="text-sm text-surface-500 dark:text-surface-400">Secure session</Text></View>
 
-              <Pressable onPress={() => router.push("/forgot-password")}>
+              <Pressable onPress={() => router.push("/(auth)/forgot-password")}>
                 <Text className="text-sm text-primary-600 dark:text-primary-400 font-medium">Forgot password?</Text>
               </Pressable>
 
