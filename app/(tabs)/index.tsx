@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFeed } from '@/hooks/usePosts';
@@ -8,6 +9,7 @@ import { CreatePostModal } from '@/components/ui/CreatePostModal';
 import { useUIStore } from '@/store/uiStore';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const { isCreatePostOpen, openCreatePost, closeCreatePost } = useUIStore();
   const feed = useFeed();
   const posts = React.useMemo(() => feed.data?.pages.flatMap(page => page.items) ?? [], [feed.data]);
@@ -19,7 +21,7 @@ export default function HomeScreen() {
           <Text className="text-xs font-bold tracking-widest text-primary-600">THOUGHTS</Text>
           <Text className="text-2xl font-bold text-slate-900 dark:text-white">Your feed</Text>
         </View>
-        <Pressable className="w-11 h-11 rounded-full bg-primary-50 dark:bg-primary-900/20 items-center justify-center">
+        <Pressable onPress={() => router.push("/(tabs)/notifications")} accessibilityRole="button" accessibilityLabel="Notifications" className="w-11 h-11 rounded-full bg-primary-50 dark:bg-primary-900/20 items-center justify-center">
           <Ionicons name="notifications-outline" size={22} color="#334155" />
         </Pressable>
       </View>
