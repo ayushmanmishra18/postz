@@ -81,12 +81,10 @@ export function useCreatePost() {
         updatedAt: new Date(),
       };
 
-      queryClient.setQueryData(queryKeys.posts.feed(), (old: any) => ({
-        ...old,
-        pages: old.pages.map((page: any, i: number) => 
-          i === 0 ? { ...page, items: [optimisticPost, ...page.items] } : page
-        ),
-      }));
+      queryClient.setQueryData(queryKeys.posts.feed(), (old: any) => {
+        if (!old?.pages?.length) return old;
+        return { ...old, pages: old.pages.map((page: any, i: number) => i === 0 ? { ...page, items: [optimisticPost, ...page.items] } : page) };
+      });
 
       return { previousFeed };
     },
@@ -240,6 +238,7 @@ export function useDeletePost() {
       Toast.show({ type: 'error', text1: 'Failed to delete', text2: 'Please try again' });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts.all });
       Toast.show({ type: 'success', text1: 'Post deleted', text2: 'Your thought has been removed' });
     },
   });
