@@ -176,28 +176,35 @@ router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
     throw new AppError('Query must be at least 2 characters', 400);
   }
 
-  const users = await User.find({
-    $text: { $search: query },
+  const safeQuery = String(query).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pageNumber = Math.max(1, Number(page) || 1);
+  const limitNumber = Math.min(50, Math.max(1, Number(limit) || 20));
+  const filter = {
     _id: { $ne: req.user?._id },
-  })
-    .select('username displayName avatar bio isVerified followersCount')
-    .skip((Number(page) - 1) * Number(limit))
-    .limit(Number(limit))
-    .lean();
+    $or: [
+      { username: { $regex: safeQuery, $options: 'i' } },
+      { displayName: { $regex: safeQuery, $options: 'i' } },
+    ],
+  };
 
+  const [users, total] = await Promise.all([
+    User.find(filter)
+      .select('username displayName avatar bio isVerified followersCount followingCount lastActiveAt')
+      .sort({ followersCount: -1, createdAt: -1 })
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber)
+      .lean(),
+    User.countDocuments(filter),
+  ]);
+
+  const totalPages = Math.ceil(total / limitNumber);
   res.json({
     success: true,
     data: {
-      items: users,
-      page: Number(page),
-      limit: Number(limit),
-      total: users.length,
-      totalPages: 1,
-      hasNextPage: false,
-      hasPrevPage: Number(page) > 1,
+      items: users, page: pageNumber, limit: limitNumber, total, totalPages,
+      hasNextPage: pageNumber < totalPages, hasPrevPage: pageNumber > 1,
     },
   });
-}));
 
 router.get('/suggestions', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
   const currentUser = await User.findById(req.user._id);
