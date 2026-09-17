@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, View, StyleSheet } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof View> {
   source?: string | { uri: string } | null;
