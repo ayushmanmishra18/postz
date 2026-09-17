@@ -1,0 +1,120 @@
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
+
+class ApiClient {
+  private client: AxiosInstance;
+  private refreshPromise: Promise<string> | null = null;
+
+  constructor() {
+    this.client = axios.create({
+      baseURL: API_URL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 30000,
+    });
+
+    this.client.interceptors.request.use(
+      async (config: InternalAxiosRequestConfig) => {
+        const accessToken = await SecureStore.getItemAsync('accessToken');
+        if (accessToken && config.headers) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    this.client.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            const newAccessToken = await this.refreshAccessToken();
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            return this.client(originalRequest);
+          } catch (refreshError) {
+            await this.clearAuth();
+            return Promise.reject(refreshError);
+          }
+        }
+
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  private async refreshAccessToken(): Promise<string> {
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    this.refreshPromise = (async () => {
+      const refreshToken = await SecureStore.getItemAsync('refreshToken');
+      if (!refreshToken) {
+        throw new Error('No refresh token');
+      }
+
+      const response = await axios.post(`${API_URL}/auth/refresh`, { refreshToken });
+      const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+
+      await SecureStore.setItemAsync('accessToken', accessToken);
+      await SecureStore.setItemAsync('refreshToken', newRefreshToken);
+
+      return accessToken;
+    })();
+
+    try {
+      return await this.refreshPromise;
+    } finally {
+      this.refreshPromise = null;
+    }
+  }
+
+  private async clearAuth(): Promise<void> {
+    await SecureStore.deleteItemAsync('accessToken');
+    await SecureStore.deleteItemAsync('refreshToken');
+    await SecureStore.deleteItemAsync('user');
+  }
+
+  async get<T>(url: string, params?: object) {
+    const response = await this.client.get<T>(url, { params });
+    return response.data;
+  }
+
+  async post<T>(url: string, data?: object) {
+    const response = await this.client.post<T>(url, data);
+    return response.data;
+  }
+
+  async put<T>(url: string, data?: object) {
+    const response = await this.client.put<T>(url, data);
+    return response.data;
+  }
+
+  async patch<T>(url: string, data?: object) {
+    const response = await this.client.patch<T>(url, data);
+    return response.data;
+  }
+
+  async delete<T>(url: string) {
+    const response = await this.client.delete<T>(url);
+    return response.data;
+  }
+
+  async upload<T>(url: string, formData: FormData) {
+    const response = await this.client.post<T>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  }
+}
+
+export const api = new ApiClient();
