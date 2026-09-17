@@ -45,7 +45,7 @@ router.post('/image', authMiddleware, upload.single('image'), asyncHandler(async
     throw new AppError('No file uploaded', 400);
   }
 
-  const fileUrl = `/uploads/${req.file.filename}`;
+  const fileUrl = `${process.env.PUBLIC_API_URL || `http://localhost:${process.env.PORT || 3000}`}/uploads/${req.file.filename}`;
   res.json({ success: true, data: { url: fileUrl } });
 }));
 
@@ -55,7 +55,8 @@ router.post('/images', authMiddleware, upload.array('images', 4), asyncHandler(a
     throw new AppError('No files uploaded', 400);
   }
 
-  const urls = files.map(f => `/uploads/${f.filename}`);
+  const baseUrl = process.env.PUBLIC_API_URL || `http://localhost:${process.env.PORT || 3000}`;
+  const urls = files.map(f => `${baseUrl}/uploads/${f.filename}`);
   res.json({ success: true, data: { urls } });
 }));
 
