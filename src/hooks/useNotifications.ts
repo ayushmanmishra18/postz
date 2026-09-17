@@ -30,9 +30,9 @@ export function useMarkAsRead() {
     onMutate: async (notificationId) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.notifications.all });
 
-      const previousNotifications = queryClient.getQueryData(queryKeys.notifications.list());
+      const previousNotifications = queryClient.getQueriesData({ queryKey: queryKeys.notifications.list() });
 
-      queryClient.setQueryData(queryKeys.notifications.list(), (old: any) => {
+      queryClient.setQueriesData({ queryKey: queryKeys.notifications.list() }, (old: any) => {
         if (!old) return old;
         return {
           ...old,
