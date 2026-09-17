@@ -3,12 +3,12 @@ import { Comment, PaginatedResponse } from '@/types';
 
 export const commentsApi = {
   getComments: async (postId: string, params?: { page?: number; limit?: number; cursor?: string }): Promise<PaginatedResponse<Comment>> => {
-    const response = await api.get<PaginatedResponse<Comment>>(`/posts/${postId}/comments`, { params });
+    const response = await api.get<PaginatedResponse<Comment>>(`/comments/post/${postId}`, { params });
     return response.data;
   },
 
   createComment: async (postId: string, content: string, parentCommentId?: string): Promise<Comment> => {
-    const response = await api.post<Comment>(`/posts/${postId}/comments`, { content, parentCommentId });
+    const response = await api.post<Comment>(`/comments/post/${postId}`, { content, parentCommentId });
     return response.data;
   },
 
