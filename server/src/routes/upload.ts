@@ -5,6 +5,7 @@ import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
+import User from '../models/User';
 
 const router = Router();
 
@@ -65,8 +66,9 @@ router.post('/avatar', authMiddleware, upload.single('avatar'), asyncHandler(asy
     throw new AppError('No file uploaded', 400);
   }
 
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.json({ success: true, data: { avatar: fileUrl } });
+  const fileUrl = `${process.env.PUBLIC_API_URL || `http://localhost:${process.env.PORT || 3000}`}/uploads/${req.file.filename}`;
+  const user = await User.findByIdAndUpdate(req.user._id, { avatar: fileUrl }, { new: true });
+  res.json({ success: true, data: { avatar: user?.avatar || fileUrl } });
 }));
 
 router.post('/cover', authMiddleware, upload.single('coverImage'), asyncHandler(async (req, res) => {
@@ -74,8 +76,9 @@ router.post('/cover', authMiddleware, upload.single('coverImage'), asyncHandler(
     throw new AppError('No file uploaded', 400);
   }
 
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.json({ success: true, data: { coverImage: fileUrl } });
+  const fileUrl = `${process.env.PUBLIC_API_URL || `http://localhost:${process.env.PORT || 3000}`}/uploads/${req.file.filename}`;
+  const user = await User.findByIdAndUpdate(req.user._id, { coverImage: fileUrl }, { new: true });
+  res.json({ success: true, data: { coverImage: user?.coverImage || fileUrl } });
 }));
 
 export default router;
