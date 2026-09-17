@@ -109,7 +109,7 @@ export function useFollowUser() {
       Toast.show({ type: 'error', text1: 'Failed', text2: 'Please try again' });
     },
     onSettled: (data, error, { userId }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.detail(userId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
     },
   });
