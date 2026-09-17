@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, FlatList, Pressable } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useSearchUsers, useUserSuggestions } from '@/hooks/useUsers';
@@ -7,11 +7,14 @@ import { User } from '@/types';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { useFollowUser } from '@/hooks/useUsers';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUIStore } from '@/store/uiStore';
 
 export default function SearchScreen() {
   const [query, setQuery] = React.useState('');
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
+  const router = useRouter();
   const { openUserProfile } = useUIStore();
   const { followUser } = useFollowUser();
   const { data: suggestions } = useUserSuggestions();
@@ -33,7 +36,7 @@ export default function SearchScreen() {
 
   const renderUser = (user: User) => (
     <Pressable
-      onPress={() => openUserProfile(user)}
+      onPress={() => router.push({ pathname: '/(tabs)/profile', params: { username: user.username } })}
       className={tw`flex-row items-center gap-4 p-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700`}
     >
       <Avatar source={user.avatar} name={user.displayName} size="md" status={user.lastActiveAt ? 'online' : 'offline'} />
@@ -64,8 +67,11 @@ export default function SearchScreen() {
 
   if (!isSearching) {
     return (
-      <View className={tw`flex-1 bg-surface-50 dark:bg-surface-950`}>
-        <View className={tw`p-4`}>
+      <SafeAreaView edges={['top']} className={tw`flex-1 bg-slate-50 dark:bg-slate-950`}>
+        <View className={tw`px-4 pt-4 pb-3`}>
+          <Text className={tw`text-2xl font-bold text-slate-900 dark:text-white mb-3`}>Discover people</Text>
+          <View className={tw`flex-row items-center bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-2xl px-3`}>
+          <Ionicons name="search" size={20} color="#94a3b8" />
           <TextInput
             placeholder="Search users..."
             value={query}
@@ -73,7 +79,9 @@ export default function SearchScreen() {
             className={tw`bg-white dark:bg-surface-900 border-2 border-surface-200 dark:border-surface-700 rounded-xl px-4 py-3 text-surface-900 dark:text-surface-50 placeholder:text-surface-400`}
             placeholderTextColor="#a1a1aa"
             autoFocus
+            className={tw`flex-1 px-3 py-3 text-surface-900 dark:text-surface-50`}
           />
+          </View>
         </View>
         {suggestions && suggestions.length > 0 && (
           <View className={tw`px-4`}>
@@ -86,12 +94,12 @@ export default function SearchScreen() {
             />
           </View>
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View className={tw`flex-1 bg-surface-50 dark:bg-surface-950`}>
+    <SafeAreaView edges={['top']} className={tw`flex-1 bg-slate-50 dark:bg-slate-950`}>
       <View className={tw`p-4`}>
         <TextInput
           placeholder="Search users..."
@@ -139,6 +147,6 @@ export default function SearchScreen() {
           contentContainerStyle={tw`pb-20`}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
