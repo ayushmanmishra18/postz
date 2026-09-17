@@ -50,7 +50,7 @@ router.post('/image', authMiddleware, upload.single('image'), asyncHandler(async
   res.json({ success: true, data: { url: fileUrl } });
 }));
 
-router.post('/images', authMiddleware, upload.array('images', 4), asyncHandler(async (req, res) => {
+router.post('/images', authMiddleware, upload.array('images', 4), asyncHandler(async (req: AuthRequest, res: Response) => {
   const files = req.files as Express.Multer.File[];
   if (!files || files.length === 0) {
     throw new AppError('No files uploaded', 400);
