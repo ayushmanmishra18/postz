@@ -112,7 +112,7 @@ export default function NotificationsScreen() {
       <View className={tw`flex-row items-center justify-between px-5 py-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800`}>
 
         <View><Text className={tw`text-2xl font-bold text-slate-900 dark:text-white`}>Notifications</Text><Text className={tw`text-xs text-surface-500 mt-1`}>{notifications.filter(n => !n.isRead).length} unread</Text></View>
-        <Pressable onPress={() => markAllAsRead()} className={tw`px-3 py-2 rounded-xl bg-primary-50 dark:bg-primary-900/20`}><Text className={tw`text-sm font-semibold text-primary-700`}>Mark all read</Text></Pressable>
+        <Pressable onPress={() => markAllAsRead.mutate()} className={tw`px-3 py-2 rounded-xl bg-primary-50 dark:bg-primary-900/20`}><Text className={tw`text-sm font-semibold text-primary-700`}>Mark all read</Text></Pressable>
       </View>
       <FlatList
         data={Object.entries(groupedNotifications)}
@@ -139,12 +139,12 @@ export default function NotificationsScreen() {
         onRefresh={refetch}
         refreshing={isLoading}
         ListFooterComponent={
-          hasNextPage && (
+          hasNextPage ? (
             <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
               <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
               <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
             </View>
-          )
+          ) : null
         }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 80 }}
