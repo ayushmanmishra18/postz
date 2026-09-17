@@ -45,6 +45,14 @@ export const Button = React.forwardRef<Pressable, ButtonProps>(
       lg: tw`px-6 py-3 text-lg gap-2.5`,
     };
 
+    const textVariants = {
+      primary: tw`text-white`,
+      secondary: tw`text-surface-900 dark:text-surface-50`,
+      outline: tw`text-primary-600`,
+      ghost: tw`text-primary-600`,
+      danger: tw`text-white`,
+    };
+
     return (
       <Pressable
         ref={ref}
@@ -55,12 +63,12 @@ export const Button = React.forwardRef<Pressable, ButtonProps>(
       >
         {loading ? (
           <View className={tw`flex-row items-center justify-center gap-2`}>
-            <Text className={tw`text-xs`}>Loading...</Text>
+            <Text className={tw`text-xs ${textVariants[variant]}`}>Loading...</Text>
           </View>
         ) : (
           <View className={tw`flex-row items-center justify-center gap-2`}>
             {leftIcon && <View className={tw`flex-shrink-0`}>{leftIcon}</View>}
-            <Text className={tw`font-medium`}>{children}</Text>
+            <Text className={tw`font-medium ${textVariants[variant]}`}>{children}</Text>
             {rightIcon && <View className={tw`flex-shrink-0`}>{rightIcon}</View>}
           </View>
         )}
