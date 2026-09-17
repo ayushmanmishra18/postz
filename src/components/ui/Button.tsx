@@ -12,7 +12,7 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<typeof Pressable> {
   children: React.ReactNode;
 }
 
-export const Button = React.forwardRef<Pressable, ButtonProps>(
+export const Button = React.forwardRef<typeof Pressable, ButtonProps>(
   (
     {
       variant = 'primary',
