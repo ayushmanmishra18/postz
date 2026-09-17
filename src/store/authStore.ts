@@ -11,11 +11,11 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   hasHydrated: boolean;
-  hasHydrated: boolean;
   setAuth: (user: User, accessToken: string, refreshToken: string) => Promise<void>;
   updateUser: (user: Partial<User>) => void;
   logout: () => Promise<void>;
   setLoading: (loading: boolean) => void;
+  setHydrated: (hydrated: boolean) => void;
 }
 
 const secureStorage = {
@@ -50,7 +50,6 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: true,
       hasHydrated: false,
-      hasHydrated: false,
 
       setAuth: async (user, accessToken, refreshToken) => {
         await secureStorage.setItem('accessToken', accessToken);
@@ -71,16 +70,13 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setLoading: (loading) => set({ isLoading: loading }),
+      setHydrated: (hydrated) => set({ hasHydrated: hydrated }),
     }),
     {
       name: 'auth-storage',
-      onRehydrateStorage: () => () => {
-        useAuthStore.setState({ hasHydrated: true, isLoading: false });
-      },
       onRehydrateStorage: () => (state) => {
-        state?.hasHydrated && state.setLoading(false);
-        state?.hasHydrated;
-        useAuthStore.setState({ hasHydrated: true });
+        state?.setHydrated(true);
+        state?.setLoading(false);
       },
       storage: createJSONStorage(() => secureStorage),
       partialize: (state) => ({
