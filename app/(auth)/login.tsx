@@ -27,7 +27,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className="flex-1 bg-surface-50 dark:bg-surface-950">
+    <View className="flex-1 bg-slate-50 dark:bg-slate-950">
       <View className="flex-1 p-6 justify-center">
         <View className="max-w-md mx-auto w-full">
 
