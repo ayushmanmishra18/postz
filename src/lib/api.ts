@@ -84,36 +84,30 @@ class ApiClient {
     await SecureStore.deleteItemAsync('user');
   }
 
-  async get<T>(url: string, params?: object) {
-    const response = await this.client.get<T>(url, { params });
-    return response.data;
+  async get<T>(url: string, config?: { params?: object }) {
+    return this.client.get<T>(url, config);
   }
 
   async post<T>(url: string, data?: object) {
-    const response = await this.client.post<T>(url, data);
-    return response.data;
+    return this.client.post<T>(url, data);
   }
 
   async put<T>(url: string, data?: object) {
-    const response = await this.client.put<T>(url, data);
-    return response.data;
+    return this.client.put<T>(url, data);
   }
 
   async patch<T>(url: string, data?: object) {
-    const response = await this.client.patch<T>(url, data);
-    return response.data;
+    return this.client.patch<T>(url, data);
   }
 
   async delete<T>(url: string) {
-    const response = await this.client.delete<T>(url);
-    return response.data;
+    return this.client.delete<T>(url);
   }
 
   async upload<T>(url: string, formData: FormData) {
-    const response = await this.client.post<T>(url, formData, {
+    return this.client.post<T>(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return response.data;
   }
 }
 
