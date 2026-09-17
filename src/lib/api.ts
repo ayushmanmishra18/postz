@@ -4,6 +4,27 @@ import { Platform } from 'react-native';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
 
+const tokenStorage = {
+  get: async (key: string) =>
+    Platform.OS === 'web'
+      ? (typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null)
+      : SecureStore.getItemAsync(key),
+  set: async (key: string, value: string) => {
+    if (Platform.OS === 'web') {
+      if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
+      return;
+    }
+    await SecureStore.setItemAsync(key, value);
+  },
+  remove: async (key: string) => {
+    if (Platform.OS === 'web') {
+      if (typeof localStorage !== 'undefined') localStorage.removeItem(key);
+      return;
+    }
+    await SecureStore.deleteItemAsync(key);
+  },
+};
+
 class ApiClient {
   private client: AxiosInstance;
   private refreshPromise: Promise<string> | null = null;
@@ -19,7 +40,7 @@ class ApiClient {
 
     this.client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        const accessToken = await SecureStore.getItemAsync('accessToken');
+        const accessToken = await tokenStorage.get('accessToken');
         if (accessToken && config.headers) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
@@ -57,7 +78,7 @@ class ApiClient {
     }
 
     this.refreshPromise = (async () => {
-      const refreshToken = await SecureStore.getItemAsync('refreshToken');
+      const refreshToken = await tokenStorage.get('refreshToken');
       if (!refreshToken) {
         throw new Error('No refresh token');
       }
@@ -65,8 +86,8 @@ class ApiClient {
       const response = await axios.post(`${API_URL}/auth/refresh`, { refreshToken });
       const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
-      await SecureStore.setItemAsync('accessToken', accessToken);
-      await SecureStore.setItemAsync('refreshToken', newRefreshToken);
+      await tokenStorage.set('accessToken', accessToken);
+      await tokenStorage.set('refreshToken', newRefreshToken);
 
       return accessToken;
     })();
@@ -79,9 +100,9 @@ class ApiClient {
   }
 
   private async clearAuth(): Promise<void> {
-    await SecureStore.deleteItemAsync('accessToken');
-    await SecureStore.deleteItemAsync('refreshToken');
-    await SecureStore.deleteItemAsync('user');
+    await tokenStorage.remove('accessToken');
+    await tokenStorage.remove('refreshToken');
+    await tokenStorage.remove('user');
   }
 
   async get<T>(url: string, config?: { params?: object }) {
