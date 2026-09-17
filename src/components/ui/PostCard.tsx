@@ -8,6 +8,8 @@ import { Button } from './Button';
 import { useLikePost, useSavePost, useDeletePost } from '@/hooks/usePosts';
 import { formatDistanceToNow } from 'date-fns';
 import { useUIStore } from '@/store/uiStore';
+import { CommentsModal } from './CommentsModal';
+import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IMAGE_WIDTH = SCREEN_WIDTH - 32;
@@ -32,6 +34,8 @@ export function PostCard({
   const likePost = useLikePost();
   const savePost = useSavePost();
   const deletePost = useDeletePost();
+  const router = useRouter();
+  const [commentsOpen, setCommentsOpen] = React.useState(false);
   const { openCommentSheet, openUserProfile } = useUIStore();
 
   const author = post.author as any;
@@ -54,19 +58,13 @@ export function PostCard({
   };
 
   const handleComment = () => {
-    if (onCommentPress) {
-      onCommentPress();
-    } else {
-      openCommentSheet(post);
-    }
+    if (onCommentPress) onCommentPress();
+    else setCommentsOpen(true);
   };
 
   const handleProfile = () => {
-    if (onProfilePress) {
-      onProfilePress();
-    } else if (author) {
-      openUserProfile(author);
-    }
+    if (onProfilePress) onProfilePress();
+    else if (author?.username) router.push({ pathname: '/(tabs)/profile', params: { username: author.username } });
   };
 
   if (isCompact) {
@@ -131,6 +129,7 @@ export function PostCard({
           </View>
         </View>
       </Pressable>
+      <CommentsModal visible={commentsOpen} postId={post._id} onClose={() => setCommentsOpen(false)} />
     );
   }
 
@@ -279,5 +278,6 @@ export function PostCard({
         </Pressable>
       </View>
     </View>
+      <CommentsModal visible={commentsOpen} postId={post._id} onClose={() => setCommentsOpen(false)} />
   );
 }
