@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl, Mod
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useUserPosts, useLikedPosts } from '@/hooks/usePosts';
 import { useFollowers, useFollowing, useUserProfile } from '@/hooks/useUsers';
 import { Avatar } from '@/components/ui/Avatar';
@@ -23,6 +23,7 @@ export default function ProfileScreen() {
   const [editBio, setEditBio] = React.useState('');
   const [editLocation, setEditLocation] = React.useState('');
   const [editWebsite, setEditWebsite] = React.useState('');
+  const router = useRouter();
   const params = useLocalSearchParams<{ username?: string }>();
   const username = params.username;
   const isOwnProfile = !username || username === currentUser?.username;
@@ -95,7 +96,7 @@ export default function ProfileScreen() {
 
   const renderUserItem = (user: any) => (
     <Pressable
-      onPress={() => openUserProfile(user)}
+      onPress={() => router.push({ pathname: '/(tabs)/profile', params: { username: user.username } })}
       className={tw`flex-row items-center gap-4 p-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700`}
     >
       <Avatar source={user.avatar} name={user.displayName} size="md" status={user.lastActiveAt ? 'online' : 'offline'} />
