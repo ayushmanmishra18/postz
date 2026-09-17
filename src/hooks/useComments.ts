@@ -86,44 +86,24 @@ export function useCreateComment() {
 
 export function useLikeComment() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ commentId, isLiked }: { commentId: string; isLiked: boolean }) =>
       isLiked ? commentsApi.unlikeComment(commentId) : commentsApi.likeComment(commentId),
-    onMutate: async ({ commentId, isLiked }) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.posts.comments('') });
-
-      const previousComments = queryClient.getQueryData(queryKeys.posts.comments(''));
-
-      queryClient.setQueryData(queryKeys.posts.comments(''), (old: any) => {
-        if (!old) return old;
-        return {
-          ...old,
-          pages: old.pages.map((page: any) => ({
-            ...page,
-            items: page.items.map((c: Comment) =>
-              c._id === commentId ? { ...c, isLiked: !isLiked, likesCount: isLiked ? c.likesCount - 1 : c.likesCount + 1 } : c
-            ),
-          })),
-        };
-      });
-
-      return { previousComments };
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts.comments('') });
     },
-    onError: (err, { commentId }, context) => {
-      if (context?.previousComments) {
-        queryClient.setQueryData(queryKeys.posts.comments(''), context.previousComments);
-      }
+    onError: () => {
+      Toast.show({ type: 'error', text1: 'Failed to update like', text2: 'Please try again' });
     },
   });
 }
-
 export function useDeleteComment() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (commentId: string) => commentsApi.deleteComment(commentId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts.comments('') });
       Toast.show({ type: 'success', text1: 'Comment deleted' });
     },
     onError: () => {
