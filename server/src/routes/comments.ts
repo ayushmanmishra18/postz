@@ -64,6 +64,7 @@ router.post('/post/:postId', authMiddleware, asyncHandler(async (req: AuthReques
     }
     parentComment = await Comment.findById(parentCommentId);
     if (!parentComment) throw new AppError('Parent comment not found', 404);
+    if (parentComment.post.toString() !== postId) throw new AppError('Parent comment belongs to another post', 400);
   }
 
   const comment = await Comment.create({
