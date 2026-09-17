@@ -166,6 +166,7 @@ export interface FeedParams {
 export interface UserPostsParams {
   page?: number;
   limit?: number;
+  cursor?: string;
   tab?: 'posts' | 'replies' | 'media' | 'likes';
 }
 
