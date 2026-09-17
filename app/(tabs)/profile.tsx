@@ -329,9 +329,6 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={tw`pb-20`}
       />
-    </View>
-  );
-
       <Modal visible={editOpen} animationType="slide" transparent onRequestClose={() => setEditOpen(false)}>
         <View className={tw`flex-1 justify-end bg-black/40`}>
           <View className={tw`bg-white dark:bg-surface-900 rounded-t-3xl p-5`}>
@@ -341,4 +338,6 @@ export default function ProfileScreen() {
           </View>
         </View>
       </Modal>
+    </View>
+  );
 }
