@@ -16,18 +16,6 @@ router.get('/me', authMiddleware, asyncHandler(async (req: AuthRequest, res: Res
   res.json({ success: true, data: user });
 }));
 
-router.get('/:username', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const user = await User.findOne({ username: req.params.username.toLowerCase() });
-  if (!user) throw new AppError('User not found', 404);
-
-  const isFollowing = req.user ? await User.findOne({
-    _id: req.user._id,
-    following: user._id
-  }) : false;
-
-  res.json({ success: true, data: { ...user.toObject(), isFollowing: !!isFollowing } });
-}));
-
 router.get('/id/:userId', asyncHandler(async (req: AuthRequest, res: Response) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
     throw new AppError('Invalid user ID', 400);
@@ -228,6 +216,18 @@ router.get('/check-username/:username', asyncHandler(async (req: AuthRequest, re
 
   const user = await User.findOne({ username });
   res.json({ success: true, data: { available: !user } });
+}));
+
+router.get('/:username', asyncHandler(async (req: AuthRequest, res: Response) => {
+  const user = await User.findOne({ username: req.params.username.toLowerCase() });
+  if (!user) throw new AppError('User not found', 404);
+
+  const isFollowing = req.user ? await User.findOne({
+    _id: req.user._id,
+    following: user._id
+  }) : false;
+
+  res.json({ success: true, data: { ...user.toObject(), isFollowing: !!isFollowing } });
 }));
 
 export default router;
