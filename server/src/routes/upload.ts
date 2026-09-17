@@ -61,7 +61,7 @@ router.post('/images', authMiddleware, upload.array('images', 4), asyncHandler(a
   res.json({ success: true, data: { urls } });
 }));
 
-router.post('/avatar', authMiddleware, upload.single('avatar'), asyncHandler(async (req, res) => {
+router.post('/avatar', authMiddleware, upload.single('avatar'), asyncHandler(async (req: AuthRequest, res: Response) => {
   if (!req.file) {
     throw new AppError('No file uploaded', 400);
   }
