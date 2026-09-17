@@ -34,7 +34,6 @@ export function PostCard({
   const deletePost = useDeletePost();
   const router = useRouter();
   const [commentsOpen, setCommentsOpen] = React.useState(false);
-  const { openCommentSheet, openUserProfile } = useUIStore();
 
   const author = post.author as any;
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
