@@ -35,7 +35,7 @@ export function useCreateComment() {
         content,
         likesCount: 0,
         isLiked: false,
-        parentCommentId,
+        parentComment: parentCommentId,
         repliesCount: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
