@@ -60,7 +60,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <View className={tw`flex-1 bg-surface-50 dark:bg-surface-950`}>
+    <View className={tw`flex-1 bg-slate-50 dark:bg-slate-950`}>
       <View className={tw`flex-1 p-6 justify-center`}>
         <View className={tw`max-w-md mx-auto w-full`}>
           <View className={tw`text-center mb-10`}>
