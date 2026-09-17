@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, Pressable } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useSearchUsers, useUserSuggestions } from '@/hooks/useUsers';
