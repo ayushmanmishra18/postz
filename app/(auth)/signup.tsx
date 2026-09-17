@@ -93,7 +93,6 @@ export default function SignupScreen() {
 
             <Input
               label="Email"
-              type="email"
               value={formData.email}
               onChangeText={(v) => handleChange('email', v.toLowerCase())}
               placeholder="you@example.com"
@@ -105,7 +104,6 @@ export default function SignupScreen() {
 
             <Input
               label="Password"
-              type={showPassword ? 'text' : 'password'}
               value={formData.password}
               onChangeText={(v) => handleChange('password', v)}
               placeholder="••••••••"
