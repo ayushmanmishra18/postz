@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<typeof Pressable> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
