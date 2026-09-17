@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl, Mod
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useUserPosts, useLikedPosts } from '@/hooks/usePosts';
 import { useFollowers, useFollowing, useUserProfile } from '@/hooks/useUsers';
 import { Avatar } from '@/components/ui/Avatar';
@@ -17,7 +17,6 @@ type ProfileTab = 'posts' | 'replies' | 'media' | 'likes';
 
 export default function ProfileScreen() {
   const { user: currentUser, logout } = useAuth();
-  const router = useRouter();
   const updateProfile = useUpdateProfile();
   const [editOpen, setEditOpen] = React.useState(false);
   const [editName, setEditName] = React.useState('');
