@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useNotifications, useMarkAllAsRead } from '@/hooks/useNotifications';
 import { Notification } from '@/types';
