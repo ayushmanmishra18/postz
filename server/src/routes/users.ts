@@ -41,11 +41,15 @@ router.patch('/me', authMiddleware, asyncHandler(async (req: AuthRequest, res: R
 }));
 
 router.post('/me/avatar', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
-  res.json({ success: true, data: { avatar: req.body.avatar } });
+  if (!req.body.avatar) throw new AppError('Avatar URL required', 400);
+  const user = await User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { new: true });
+  res.json({ success: true, data: { avatar: user?.avatar || req.body.avatar } });
 }));
 
 router.post('/me/cover', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
-  res.json({ success: true, data: { coverImage: req.body.coverImage } });
+  if (!req.body.coverImage) throw new AppError('Cover image URL required', 400);
+  const user = await User.findByIdAndUpdate(req.user._id, { coverImage: req.body.coverImage }, { new: true });
+  res.json({ success: true, data: { coverImage: user?.coverImage || req.body.coverImage } });
 }));
 
 router.post('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
