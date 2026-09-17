@@ -98,11 +98,11 @@ export function CreatePostModal({ isOpen, onClose, initialContent = '', initialI
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className={tw`fixed inset-0 z-50 bg-black/50 flex flex-col`}
+      className={tw`fixed inset-0 z-50 bg-slate-950/45 flex flex-col`}
       style={StyleSheet.absoluteFillObject}
     >
       <View className={tw`flex-1 bg-white dark:bg-surface-900 flex-col`}>
-        <View className={tw`flex-row items-center justify-between p-4 border-b border-surface-200 dark:border-surface-700`}>
+        <View className={tw`flex-row items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-surface-700`}>
           <Pressable onPress={onClose} className={tw`p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800`}>
             <Ionicons name="close" size={24} color="#71717a" />
           </Pressable>
