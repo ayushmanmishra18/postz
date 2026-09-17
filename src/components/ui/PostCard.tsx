@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet, Dimensions, Alert, Share } from 'react-native';
+import { View, Text, Image, Pressable, Dimensions, Alert, Share } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { Post } from '@/types';
 import { Avatar } from './Avatar';
-import { Button } from './Button';
 import { useLikePost, useSavePost, useDeletePost } from '@/hooks/usePosts';
 import { formatDistanceToNow } from 'date-fns';
 import { useUIStore } from '@/store/uiStore';
@@ -69,6 +68,7 @@ export function PostCard({
 
   if (isCompact) {
     return (
+      <>
       <Pressable onPress={onPress} className={tw`bg-white dark:bg-surface-900 p-4`}>
         <View className={tw`flex-row gap-3`}>
           <Pressable onPress={handleProfile} className={tw`flex-shrink-0`}>
@@ -130,6 +130,7 @@ export function PostCard({
         </View>
       </Pressable>
       <CommentsModal visible={commentsOpen} postId={post._id} onClose={() => setCommentsOpen(false)} />
+      </>
     );
   }
 
@@ -278,6 +279,8 @@ export function PostCard({
         </Pressable>
       </View>
     </View>
+    <>
       <CommentsModal visible={commentsOpen} postId={post._id} onClose={() => setCommentsOpen(false)} />
+    </>
   );
 }
