@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Comment from '../models/Comment';
 import Post from '../models/Post';
+import Notification from '../models/Notification';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import mongoose from 'mongoose';
@@ -87,6 +88,7 @@ router.post('/post/:postId', authMiddleware, asyncHandler(async (req: AuthReques
   (req as any).io?.emit('comment:created', populatedComment);
 
   if (post.author.toString() !== req.user._id.toString()) {
+    await Notification.create({ user: post.author, type: 'comment', actor: req.user._id, post: post._id, comment: comment._id });
     (req as any).io?.to(post.author.toString()).emit('notification:created', {
       type: 'comment',
       actor: req.user,
