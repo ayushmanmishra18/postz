@@ -133,9 +133,7 @@ class ApiClient {
   }
 
   async upload<T>(url: string, formData: FormData) {
-    return this.unwrap<T>(await this.client.post(url, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }));
+    return this.unwrap<T>(await this.client.post(url, formData));
   }
 }
 
