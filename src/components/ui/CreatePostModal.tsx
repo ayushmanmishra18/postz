@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, TextInput, Image, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useCreatePost, useUploadImages } from '@/hooks/usePosts';
 import { useUIStore } from '@/store/uiStore';
