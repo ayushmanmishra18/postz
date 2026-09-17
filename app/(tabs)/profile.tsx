@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl } fr
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useUserPosts, useLikedPosts } from '@/hooks/usePosts';
 import { useFollowers, useFollowing, useUserProfile } from '@/hooks/useUsers';
 import { Avatar } from '@/components/ui/Avatar';
@@ -16,7 +16,8 @@ import { formatDistanceToNow } from 'date-fns';
 type ProfileTab = 'posts' | 'replies' | 'media' | 'likes';
 
 export default function ProfileScreen() {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, logout } = useAuth();
+  const router = useRouter();
   const params = useLocalSearchParams<{ username?: string }>();
   const username = params.username;
   const isOwnProfile = !username || username === currentUser?.username;
@@ -160,6 +161,14 @@ export default function ProfileScreen() {
       </View>
 
       <View className={tw`px-4 pt-6 pb-4`}>
+        {isOwnProfile && (
+          <View className={tw`flex-row justify-end mb-3`}>
+            <Pressable onPress={() => logout()} className={tw`flex-row items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 dark:bg-surface-800`}>
+              <Ionicons name="log-out-outline" size={18} color="#64748b" />
+              <Text className={tw`text-sm font-semibold text-slate-600 dark:text-slate-300`}>Log out</Text>
+            </Pressable>
+          </View>
+        )}
         <View className={tw`flex-row items-center justify-between mb-4`}>
           <View>
             <Text className={tw`text-xl font-bold text-surface-900 dark:text-surface-50`}>
