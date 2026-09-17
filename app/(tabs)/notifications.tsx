@@ -12,8 +12,8 @@ import { PostCard } from '@/components/ui/PostCard';
 
 export default function NotificationsScreen() {
   const { data: notificationsData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, refetch } = useNotifications();
-  const { markAllAsRead } = useMarkAllAsRead();
-  const { markAsRead } = useMarkAsRead();
+  const markAllAsRead = useMarkAllAsRead();
+  const markAsRead = useMarkAsRead();
   const router = useRouter();
 
   const notifications = React.useMemo(() => {
