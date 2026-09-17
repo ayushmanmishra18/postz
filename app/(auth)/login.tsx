@@ -86,13 +86,7 @@ export default function LoginScreen() {
 
             <View className="flex-row items-center justify-between">
 
-              <Pressable className="flex-row items-center gap-2">
-                <View className="w-4 h-4 border-2 border-surface-300 dark:border-surface-600 rounded-sm" />
-
-                <Text className="text-sm text-surface-600 dark:text-surface-400">
-                  Remember me
-                </Text>
-              </Pressable>
+              <View className="flex-row items-center gap-2"><View className="w-1.5 h-1.5 rounded-full bg-primary-500" /><Text className="text-sm text-surface-500 dark:text-surface-400">Secure session</Text></View>
 
               <Pressable onPress={() => router.push("/forgot-password")}>
                 <Text className="text-sm text-primary-600 dark:text-primary-400 font-medium">Forgot password?</Text>
