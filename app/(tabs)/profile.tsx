@@ -156,7 +156,7 @@ export default function ProfileScreen() {
                 className={tw`border-4 border-white dark:border-surface-900`}
               />
               {isOwnProfile ? (
-                <Button variant="secondary" size="md" className={tw`mb-6`}>
+                <Button variant="secondary" size="md" className={tw`mb-6`} onPress={openEdit}>
                   Edit Profile
                 </Button>
               ) : profile.isFollowing ? (
