@@ -146,16 +146,11 @@ export default function SignupScreen() {
             </Button>
           </View>
 
-          <View className={tw`mt-8 text-center`}>
-            <Text className={tw`text-surface-500 dark:text-surface-400`}>
-              Already have an account?{' '}
-              <Pressable
-                onPress={() => router.push('/login')}
-                className={tw`text-primary-600 dark:text-primary-400 font-semibold`}
-              >
-                Sign in
-              </Pressable>
-            </Text>
+          <View className={tw`mt-8 flex-row items-center justify-center`}>
+            <Text className={tw`text-surface-500 dark:text-surface-400`}>Already have an account?</Text>
+            <Pressable onPress={() => router.push('/login')} className={tw`ml-1 px-1 py-1`}>
+              <Text className={tw`text-primary-600 dark:text-primary-400 font-semibold`}>Sign in</Text>
+            </Pressable>
           </View>
         </View>
       </View>
