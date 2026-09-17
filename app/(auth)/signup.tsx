@@ -124,7 +124,6 @@ export default function SignupScreen() {
 
             <Input
               label="Confirm Password"
-              type={showPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
               onChangeText={(v) => handleChange('confirmPassword', v)}
               placeholder="••••••••"
