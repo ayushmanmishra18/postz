@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { verifyAccessToken } from '../lib/auth';
 import User from '../models/User';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export interface AuthRequest extends Request {
   user?: any;
@@ -21,7 +19,8 @@ export const authMiddleware = async (
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = verifyAccessToken(token);
+    if (!decoded) throw new Error('Invalid token');
 
     const user = await User.findById(decoded.userId).select('-password');
     if (!user) {
@@ -44,7 +43,8 @@ export const optionalAuth = async (
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+      const decoded = verifyAccessToken(token);
+      if (!decoded) throw new Error('Invalid token');
       const user = await User.findById(decoded.userId).select('-password');
       if (user) req.user = user;
     }
