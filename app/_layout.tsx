@@ -6,6 +6,7 @@ import { queryClient } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/useAuth';
 import { Toast as ToastHost } from '@/components/Toast';
 import { useAuthStore } from '@/store/authStore';
+import { useRealtime } from '@/hooks/useRealtime';
 
 export default function RootLayout() {
   return (
@@ -17,6 +18,7 @@ export default function RootLayout() {
 }
 
 function RootNavigator() {
+  useRealtime();
   const { isAuthenticated } = useAuth();
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
