@@ -141,7 +141,7 @@ export default function SearchScreen() {
             )
           }
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={tw`pb-20`}
+          contentContainerStyle={{ paddingBottom: 80 }}
         />
       )}
     </SafeAreaView>
