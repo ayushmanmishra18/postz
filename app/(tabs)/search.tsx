@@ -55,7 +55,7 @@ export default function SearchScreen() {
       <Button
         variant={user.isFollowing ? 'secondary' : 'primary'}
         size="sm"
-        onPress={() => followUser.mutate({ userId: user._id, isFollowing: user.isFollowing })}
+        onPress={() => followUser.mutate({ userId: user._id, isFollowing: !!user.isFollowing })}
         disabled={followUser.isPending}
       >
         {user.isFollowing ? 'Following' : 'Follow'}
@@ -113,7 +113,7 @@ export default function SearchScreen() {
         </View>
       ) : users.length === 0 ? (
         <View className={tw`flex-1 items-center justify-center px-4`}>
-          <Ionicons name="person-search-outline" size={64} color="#a1a1aa" />
+          <Ionicons name="person-outline" size={64} color="#a1a1aa" />
           <Text className={tw`mt-4 text-lg font-medium text-surface-600 dark:text-surface-400 text-center`}>
             No users found
           </Text>
@@ -133,12 +133,12 @@ export default function SearchScreen() {
           }}
           onEndReachedThreshold={0.5}
           ListFooterComponent={
-            hasNextPage && (
+            hasNextPage ? (
               <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
                 <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
                 <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
               </View>
-            )
+            ) : null
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 80 }}
