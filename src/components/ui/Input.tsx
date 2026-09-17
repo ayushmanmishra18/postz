@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import { useId } from 'react';
 
 interface InputProps extends React.ComponentPropsWithoutRef<typeof TextInput> {
