@@ -43,7 +43,7 @@ export default function ProfileScreen() {
   const { data: followersData, fetchNextPage: fetchFollowers, hasNextPage: hasMoreFollowers } = useFollowers(profile?._id || '');
   const { data: followingData, fetchNextPage: fetchFollowing, hasNextPage: hasMoreFollowing } = useFollowing(profile?._id || '');
 
-  const { followUser } = useFollowUser();
+  const followUser = useFollowUser();
   const { openUserProfile } = useUIStore();
   const posts = React.useMemo(() => {
     if (!postsData) return [];
