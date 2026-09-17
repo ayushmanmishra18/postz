@@ -2,12 +2,14 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuthStore } from '@/store/authStore';
 
 export default function LoginScreen() {
   const { login, isLoading } = useAuth();
+  const router = useRouter();
   const setLoading = useAuthStore((state) => state.setLoading);
 
   const [email, setEmail] = React.useState('');
@@ -93,7 +95,7 @@ export default function LoginScreen() {
               </Pressable>
 
               <Pressable
-                onPress={() => {}}
+                onPress={() => router.push('/signup')}
               >
                 <Text className="text-sm text-primary-600 dark:text-primary-400 font-medium">
                   Forgot password?
@@ -120,7 +122,7 @@ export default function LoginScreen() {
             </Text>
 
             <Pressable
-              onPress={() => {}}
+              onPress={() => router.push('/signup')}
               className="mt-1"
             >
               <Text className="text-primary-600 dark:text-primary-400 font-semibold">
