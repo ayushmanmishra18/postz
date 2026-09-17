@@ -84,7 +84,8 @@ router.post('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRequ
   await Promise.all([currentUser.save(), targetUser.save()]);
 
   if (!isFollowing) {
-    await Notification.create({ user: targetUserId, type: 'follow', actor: req.user._id });
+    const notification = await Notification.create({ user: targetUserId, type: 'follow', actor: req.user._id });
+    req.io?.to(targetUserId).emit('notification:created', notification);
   }
 
   req.io?.to(targetUserId).emit('user:followed', {
