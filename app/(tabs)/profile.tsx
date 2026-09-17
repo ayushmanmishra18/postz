@@ -10,7 +10,6 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { PostCard } from '@/components/ui/PostCard';
 import { useFollowUser, useUpdateProfile } from '@/hooks/useUsers';
-import { useUIStore } from '@/store/uiStore';
 import { formatDistanceToNow } from 'date-fns';
 
 type ProfileTab = 'posts' | 'replies' | 'media' | 'likes';
@@ -45,7 +44,6 @@ export default function ProfileScreen() {
   const { data: followingData, fetchNextPage: fetchFollowing, hasNextPage: hasMoreFollowing } = useFollowing(profile?._id || '');
 
   const followUser = useFollowUser();
-  const { openUserProfile } = useUIStore();
   const posts = React.useMemo(() => {
     if (!postsData) return [];
     return postsData.pages.flatMap(page => page.items);
