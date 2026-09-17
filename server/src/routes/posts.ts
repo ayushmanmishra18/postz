@@ -12,6 +12,7 @@ const router = Router();
 router.get('/feed', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
   const { page = 1, limit = 10, cursor } = req.query;
   const currentUser = await User.findById(req.user._id);
+  if (!currentUser) throw new AppError('User not found', 404);
   const following = currentUser.following || [];
 
   const query: any = {
