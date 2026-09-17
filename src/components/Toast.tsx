@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import Toast from 'react-native-toast-message';
 
 export function Toast() {
