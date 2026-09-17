@@ -14,6 +14,7 @@ import notificationRoutes from './routes/notifications';
 import uploadRoutes from './routes/upload';
 import { errorHandler } from './middleware/errorHandler';
 import { authMiddleware } from './middleware/auth';
+import { verifyAccessToken } from './lib/auth';
 
 dotenv.config();
 
@@ -52,6 +53,21 @@ app.use('/api/posts', authMiddleware, postRoutes);
 app.use('/api/comments', authMiddleware, commentRoutes);
 app.use('/api/notifications', authMiddleware, notificationRoutes);
 app.use('/api/upload', authMiddleware, uploadRoutes);
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) return next(new Error('Authentication required'));
+  const payload = verifyAccessToken(token);
+  if (!payload) return next(new Error('Invalid token'));
+  socket.data.userId = payload.userId;
+  next();
+});
+
+io.on('connection', (socket) => {
+  const userId = socket.data.userId;
+  if (userId) socket.join(userId);
+  socket.on('disconnect', () => {});
+});
 
 app.use(errorHandler);
 
