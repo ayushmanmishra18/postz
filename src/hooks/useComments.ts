@@ -90,7 +90,7 @@ export function useLikeComment() {
     mutationFn: ({ commentId, isLiked }: { commentId: string; isLiked: boolean }) =>
       isLiked ? commentsApi.unlikeComment(commentId) : commentsApi.likeComment(commentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.posts.comments('') });
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts.all });
     },
     onError: () => {
       Toast.show({ type: 'error', text1: 'Failed to update like', text2: 'Please try again' });
