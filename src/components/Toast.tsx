@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { tw } from '@/lib/tw';
-import Toast from 'react-native-toast-message';
+import ToastView from 'react-native-toast-message';
 
 export function Toast() {
   return (
-    <Toast
+    <ToastView
       position="top"
       visibilityTime={4000}
       autoHide={true}
