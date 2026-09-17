@@ -38,3 +38,41 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run typecheck
+
+
+  windows-web-smoke:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx playwright install chromium
+      - name: Start Expo web server
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npx expo start --web --localhost --port 8081 > expo.log 2>&1" -PassThru
+          $process.Id | Out-File expo.pid
+          $ready = $false
+          for ($i = 0; $i -lt 90; $i++) {
+            Start-Sleep -Seconds 2
+            try {
+              $response = Invoke-WebRequest -Uri "http://127.0.0.1:8081" -UseBasicParsing -TimeoutSec 5
+              if ($response.StatusCode -eq 200) {
+                $ready = $true
+                break
+              }
+            } catch {}
+          }
+          if (-not $ready) {
+            Get-Content expo.log
+            throw "Expo web server did not become ready"
+          }
+      - name: Run browser smoke test
+        shell: pwsh
+        run: node tests/web-smoke.mjs
+      - name: Expo logs on failure
+        if: failure()
+        shell: pwsh
+        run: if (Test-Path expo.log) { Get-Content expo.log }
