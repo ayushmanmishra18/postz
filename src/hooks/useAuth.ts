@@ -4,7 +4,7 @@ import { authApi } from '@/api/auth';
 import { usersApi } from '@/api/users';
 import { queryKeys } from '@/lib/queryClient';
 import { useAuthStore } from '@/store/authStore';
-import { LoginInput, RegisterInput, ForgotPasswordInput, ResetPasswordInput, User } from '@/types';
+import { LoginInput, RegisterInput, ForgotPasswordInput, ResetPasswordInput, User, UpdateProfileInput } from '@/types';
 import Toast from 'react-native-toast-message';
 
 export function useAuth() {
@@ -83,7 +83,7 @@ export function useAuth() {
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: (data: Partial<User>) => usersApi.updateProfile(data),
+    mutationFn: (data: UpdateProfileInput) => usersApi.updateProfile(data),
     onSuccess: (updatedUser) => {
       updateUser(updatedUser);
       queryClient.setQueryData(queryKeys.auth.me, updatedUser);
