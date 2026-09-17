@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
 app.use((req, res, next) => {
-  req.io = io;
+  (req as any).io = io;
   next();
 });
 
