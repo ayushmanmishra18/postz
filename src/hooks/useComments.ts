@@ -37,8 +37,8 @@ export function useCreateComment() {
         isLiked: false,
         parentCommentId,
         repliesCount: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       queryClient.setQueryData(queryKeys.posts.comments(postId), (old: any) => {

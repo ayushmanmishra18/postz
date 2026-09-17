@@ -1,19 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { tw } from 'nativewind';
-import { Ionicons } from '@expo/vector-icons';
+import { Stack, Tabs } from 'expo-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
-import { useUIStore } from '@/store/uiStore';
+
+const queryClient = new QueryClient();
 
 export default function Layout() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppLayout />
+    </QueryClientProvider>
+  );
+}
+
+function AppLayout() {
   const { isAuthenticated } = useAuth();
-  const { activeTab, setActiveTab } = useUIStore();
 
   if (!isAuthenticated) {
     return (
-      <View className={tw`flex-1`}>
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="login" />
-      </View>
+        <Stack.Screen name="signup" />
+        <Stack.Screen name="forgot-password" />
+        <Stack.Screen name="reset-password" />
+      </Stack>
     );
   }
 
@@ -26,38 +36,60 @@ export default function Layout() {
         tabBarStyle: {
           backgroundColor: '#fff',
           borderTopWidth: 0,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 8,
-          elevation: 8,
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ focused, color }) => <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon name="home" focused={focused} color={color} />
+          ),
         }}
       />
+
       <Tabs.Screen
         name="search"
         options={{
-          tabBarIcon: ({ focused, color }) => <Ionicons name={focused ? 'search' : 'search-outline'} size={24} color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon name="search" focused={focused} color={color} />
+          ),
         }}
       />
+
       <Tabs.Screen
         name="notifications"
         options={{
-          tabBarIcon: ({ focused, color }) => <Ionicons name={focused ? 'notifications' : 'notifications-outline'} size={24} color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              name="notifications"
+              focused={focused}
+              color={color}
+            />
+          ),
         }}
       />
+
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ focused, color }) => <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon name="person" focused={focused} color={color} />
+          ),
         }}
       />
     </Tabs>
   );
+}
+
+function TabIcon({
+  name,
+  focused,
+  color,
+}: {
+  name: string;
+  focused: boolean;
+  color: string;
+}) {
+  return null;
 }

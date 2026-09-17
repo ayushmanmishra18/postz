@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authApi } from '@/api/auth';
+import { usersApi } from '@/api/users';
 import { queryKeys } from '@/lib/queryClient';
 import { useAuthStore } from '@/store/authStore';
 import { LoginInput, RegisterInput, ForgotPasswordInput, ResetPasswordInput, User } from '@/types';
@@ -74,7 +75,7 @@ export function useAuth() {
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: (data: Partial<User>) => authApi.updateProfile(data),
+    mutationFn: (data: Partial<User>) => usersApi.updateProfile(data),
     onSuccess: (updatedUser) => {
       updateUser(updatedUser);
       queryClient.setQueryData(queryKeys.auth.me, updatedUser);

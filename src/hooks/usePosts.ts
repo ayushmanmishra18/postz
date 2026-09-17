@@ -7,9 +7,9 @@ import Toast from 'react-native-toast-message';
 export function useFeed(params?: FeedParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.posts.feed(params),
-    queryFn: ({ pageParam }) => postsApi.getFeed({ ...params, cursor: pageParam }),
+    queryFn: ({ pageParam }) => postsApi.getFeed({ ...params, cursor: pageParam as string | undefined }),
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.items[lastPage.items.length - 1]?._id : undefined,
-    initialPageParam: undefined,
+    initialPageParam: undefined as string | undefined,
     staleTime: 1000 * 60 * 2,
   });
 }
@@ -26,8 +26,9 @@ export function usePost(postId: string, enabled = true) {
 export function useUserPosts(userId: string, params?: UserPostsParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.posts.userPosts(userId, params),
-    queryFn: ({ pageParam }) => postsApi.getUserPosts(userId, { ...params, cursor: pageParam }),
+    queryFn: ({ pageParam }) => postsApi.getUserPosts(userId, { ...params, cursor: pageParam as string | undefined }),
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.items[lastPage.items.length - 1]?._id : undefined,
+    initialPageParam: undefined as string | undefined,
     enabled: !!userId,
     staleTime: 1000 * 60 * 2,
   });
@@ -36,8 +37,9 @@ export function useUserPosts(userId: string, params?: UserPostsParams) {
 export function useLikedPosts(userId: string, params?: FeedParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.posts.liked(userId, params),
-    queryFn: ({ pageParam }) => postsApi.getLikedPosts(userId, { ...params, cursor: pageParam }),
+    queryFn: ({ pageParam }) => postsApi.getLikedPosts(userId, { ...params, cursor: pageParam as string | undefined }),
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.items[lastPage.items.length - 1]?._id : undefined,
+    initialPageParam: undefined as string | undefined,
     enabled: !!userId,
     staleTime: 1000 * 60 * 2,
   });
@@ -46,8 +48,9 @@ export function useLikedPosts(userId: string, params?: FeedParams) {
 export function useSavedPosts(params?: FeedParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.posts.saved(params),
-    queryFn: ({ pageParam }) => postsApi.getSavedPosts({ ...params, cursor: pageParam }),
+    queryFn: ({ pageParam }) => postsApi.getSavedPosts({ ...params, cursor: pageParam as string | undefined }),
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.items[lastPage.items.length - 1]?._id : undefined,
+    initialPageParam: undefined as string | undefined,
     staleTime: 1000 * 60 * 2,
   });
 }
@@ -74,8 +77,8 @@ export function useCreatePost() {
         isSaved: false,
         isReposted: false,
         visibility: newPost.visibility || 'public',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       queryClient.setQueryData(queryKeys.posts.feed(), (old: any) => ({

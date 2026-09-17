@@ -6,6 +6,7 @@ import Notification from '../models/Notification';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import { asyncHandler, AppError } from '../middleware/errorHandler';
 import mongoose from 'mongoose';
+import { Response } from 'express';
 
 const router = Router();
 

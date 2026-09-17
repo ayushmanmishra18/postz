@@ -26,7 +26,7 @@ export function useFollowers(userId: string, params?: { page?: number; limit?: n
   return useInfiniteQuery({
     queryKey: queryKeys.users.followers(userId, params),
     queryFn: ({ pageParam }) => usersApi.getFollowers(userId, { ...params, page: pageParam }),
-    getNextPageParam: (lastPage) => lastPage.hasNextPage ? (pageParam as number) + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => lastPage.hasNextPage ? allPages.length + 1 : undefined,
     initialPageParam: 1,
     enabled: !!userId,
     staleTime: 1000 * 60 * 2,
@@ -37,7 +37,7 @@ export function useFollowing(userId: string, params?: { page?: number; limit?: n
   return useInfiniteQuery({
     queryKey: queryKeys.users.following(userId, params),
     queryFn: ({ pageParam }) => usersApi.getFollowing(userId, { ...params, page: pageParam }),
-    getNextPageParam: (lastPage) => lastPage.hasNextPage ? (pageParam as number) + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => lastPage.hasNextPage ? allPages.length + 1 : undefined,
     initialPageParam: 1,
     enabled: !!userId,
     staleTime: 1000 * 60 * 2,
@@ -48,7 +48,7 @@ export function useSearchUsers(query: string, params?: SearchUsersParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.users.search(query, params),
     queryFn: ({ pageParam }) => usersApi.searchUsers({ ...params, query, page: pageParam }),
-    getNextPageParam: (lastPage) => lastPage.hasNextPage ? (pageParam as number) + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => lastPage.hasNextPage ? allPages.length + 1 : undefined,
     initialPageParam: 1,
     enabled: query.length >= 2,
     staleTime: 1000 * 60 * 1,

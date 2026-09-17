@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { notificationsApi } from '@/api/notifications';
 import { queryKeys } from '@/lib/queryClient';
 import { Notification } from '@/types';
@@ -7,7 +7,7 @@ export function useNotifications(params?: { page?: number; limit?: number; unrea
   return useInfiniteQuery({
     queryKey: queryKeys.notifications.list(params),
     queryFn: ({ pageParam }) => notificationsApi.getNotifications({ ...params, page: pageParam }),
-    getNextPageParam: (lastPage) => lastPage.hasNextPage ? (pageParam as number) + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => lastPage.hasNextPage ? allPages.length + 1 : undefined,
     initialPageParam: 1,
     staleTime: 1000 * 60 * 1,
   });

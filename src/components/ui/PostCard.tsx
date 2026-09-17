@@ -72,7 +72,9 @@ export function PostCard({
     return (
       <Pressable onPress={onPress} className={tw`bg-white dark:bg-surface-900 p-4`}>
         <View className={tw`flex-row gap-3`}>
-          <Avatar source={author?.avatar} name={author?.displayName} size="sm" onPress={handleProfile} />
+          <Pressable onPress={handleProfile} className={tw`flex-shrink-0`}>
+            <Avatar source={author?.avatar} name={author?.displayName} size="sm" />
+          </Pressable>
           <View className={tw`flex-1 min-w-0`}>
             <View className={tw`flex-row items-center justify-between`}>
               <View className={tw`flex-row items-center gap-2 flex-1 min-w-0`}>
