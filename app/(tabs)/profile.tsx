@@ -3,8 +3,9 @@ import { View, Text, Image, FlatList, StyleSheet, Pressable, RefreshControl } fr
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
+import { useLocalSearchParams } from 'expo-router';
 import { useUserPosts, useLikedPosts } from '@/hooks/usePosts';
-import { useFollowers, useFollowing } from '@/hooks/useUsers';
+import { useFollowers, useFollowing, useUserProfile } from '@/hooks/useUsers';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { PostCard } from '@/components/ui/PostCard';
@@ -14,12 +15,16 @@ import { formatDistanceToNow } from 'date-fns';
 
 type ProfileTab = 'posts' | 'replies' | 'media' | 'likes';
 
-export default function ProfileScreen({ route }: any) {
+export default function ProfileScreen() {
   const { user: currentUser } = useAuth();
-  const { params } = route;
-  const username = params?.username;
+  const params = useLocalSearchParams<{ username?: string }>();
+  const username = params.username;
   const isOwnProfile = !username || username === currentUser?.username;
   const targetUsername = username || currentUser?.username;
+
+  const [activeTab, setActiveTab] = React.useState<ProfileTab>('posts');
+  const [showFollowers, setShowFollowers] = React.useState(false);
+  const [showFollowing, setShowFollowing] = React.useState(false);
 
   const { data: profile } = useUserProfile(targetUsername!);
   const { data: postsData, fetchNextPage: fetchPosts, hasNextPage: hasMorePosts, isFetchingNextPage: isLoadingPosts } = useUserPosts(
@@ -34,10 +39,6 @@ export default function ProfileScreen({ route }: any) {
 
   const { followUser } = useFollowUser();
   const { openUserProfile } = useUIStore();
-  const [activeTab, setActiveTab] = React.useState<ProfileTab>('posts');
-  const [showFollowers, setShowFollowers] = React.useState(false);
-  const [showFollowing, setShowFollowing] = React.useState(false);
-
   const posts = React.useMemo(() => {
     if (!postsData) return [];
     return postsData.pages.flatMap(page => page.items);
