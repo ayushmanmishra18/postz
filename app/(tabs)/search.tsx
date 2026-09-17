@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, FlatList, StyleSheet } from 'react-native';
-import { tw } from 'nativewind';
+import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useSearchUsers, useUserSuggestions } from '@/hooks/useUsers';
 import { User } from '@/types';
