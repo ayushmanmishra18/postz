@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { tw } from '@/lib/tw';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +10,7 @@ import { useAuthStore } from '@/store/authStore';
 
 export default function SignupScreen() {
   const { register, isLoading } = useAuth();
+  const router = useRouter();
   const setLoading = useAuthStore((state) => state.setLoading);
   const [formData, setFormData] = React.useState({
     displayName: '',
@@ -148,9 +150,7 @@ export default function SignupScreen() {
             <Text className={tw`text-surface-500 dark:text-surface-400`}>
               Already have an account?{' '}
               <Pressable
-                onPress={() => {
-                  // Navigate to login
-                }}
+                onPress={() => router.push('/login')}
                 className={tw`text-primary-600 dark:text-primary-400 font-semibold`}
               >
                 Sign in
