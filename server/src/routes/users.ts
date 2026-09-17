@@ -77,16 +77,23 @@ router.post('/:userId/follow', authMiddleware, asyncHandler(async (req: AuthRequ
 
   if (isFollowing) {
     currentUser.following = currentUser.following.filter((id: any) => id.toString() !== targetUserId);
+    targetUser.followers = (targetUser.followers || []).filter((id: any) => id.toString() !== req.user._id.toString());
     currentUser.followingCount = Math.max(0, currentUser.followingCount - 1);
     targetUser.followersCount = Math.max(0, targetUser.followersCount - 1);
   } else {
     if (!currentUser.following) currentUser.following = [];
+    if (!targetUser.followers) targetUser.followers = [];
     currentUser.following.push(targetUserId);
+    targetUser.followers.push(req.user._id);
     currentUser.followingCount += 1;
     targetUser.followersCount += 1;
   }
 
   await Promise.all([currentUser.save(), targetUser.save()]);
+
+  if (!isFollowing) {
+    await Notification.create({ user: targetUserId, type: 'follow', actor: req.user._id });
+  }
 
   req.io?.to(targetUserId).emit('user:followed', {
     followerId: req.user._id,
