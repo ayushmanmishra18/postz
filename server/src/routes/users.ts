@@ -207,6 +207,7 @@ router.get('/search', asyncHandler(async (req: AuthRequest, res: Response) => {
       hasNextPage: pageNumber < totalPages, hasPrevPage: pageNumber > 1,
     },
   });
+}));
 
 router.get('/suggestions', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
   const currentUser = await User.findById(req.user._id);
