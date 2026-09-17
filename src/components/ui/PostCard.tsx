@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet, Dimensions, Alert, Share } from 'react-native';
 import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { Post } from '@/types';
@@ -47,9 +47,10 @@ export function PostCard({
   };
 
   const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this post?')) {
-      deletePost.mutate(post._id);
-    }
+    Alert.alert('Delete thought?', 'This action cannot be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => deletePost.mutate(post._id) },
+    ]);
   };
 
   const handleComment = () => {
@@ -270,9 +271,7 @@ export function PostCard({
         </View>
 
         <Pressable
-          onPress={() => {
-            // Share functionality
-          }}
+          onPress={() => Share.share({ message: post.content })}
           className={tw`flex-row items-center gap-2 py-1 px-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800`}
           accessibilityLabel="Share"
         >
