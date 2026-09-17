@@ -16,6 +16,8 @@ export interface User {
   postsCount: number;
   createdAt: Date;
   updatedAt: Date;
+  lastActiveAt?: Date;
+  isFollowing?: boolean;
 }
 
 export interface Post {
@@ -162,7 +164,6 @@ export interface FeedParams {
 }
 
 export interface UserPostsParams {
-  userId: string;
   page?: number;
   limit?: number;
   tab?: 'posts' | 'replies' | 'media' | 'likes';
