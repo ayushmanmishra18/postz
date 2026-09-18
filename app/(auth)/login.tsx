@@ -22,6 +22,8 @@ export default function LoginScreen() {
 
     try {
       await login({ email, password });
+    } catch {
+      // handled by loginMutation's onError toast
     } finally {
       setLoading(false);
     }

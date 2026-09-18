@@ -17,6 +17,7 @@ export default function ForgotPasswordScreen() {
     if (!email.trim()) return;
     setLoading(true);
     try { await forgotPassword({ email: email.trim().toLowerCase() }); }
+    catch { /* handled by forgotPasswordMutation's onError toast */ }
     finally { setLoading(false); }
   };
 

@@ -47,6 +47,8 @@ export default function SignupScreen() {
         email: formData.email.toLowerCase().trim(),
         password: formData.password,
       });
+    } catch {
+      // handled by registerMutation's onError toast
     } finally {
       setLoading(false);
     }

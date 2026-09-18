@@ -74,8 +74,12 @@ export default function ProfileScreen() {
     setEditName(profile.displayName || ''); setEditBio(profile.bio || ''); setEditLocation(profile.location || ''); setEditWebsite(profile.website || ''); setEditOpen(true);
   };
   const saveEdit = async () => {
-    await updateProfile.mutateAsync({ displayName: editName.trim(), bio: editBio.trim(), location: editLocation.trim(), website: editWebsite.trim() });
-    setEditOpen(false);
+    try {
+      await updateProfile.mutateAsync({ displayName: editName.trim(), bio: editBio.trim(), location: editLocation.trim(), website: editWebsite.trim() });
+      setEditOpen(false);
+    } catch {
+      // handled by updateProfileMutation's onError toast
+    }
   };
 
   const handleFollow = () => {

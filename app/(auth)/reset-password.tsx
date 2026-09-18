@@ -20,6 +20,8 @@ export default function ResetPasswordScreen() {
     try {
       await resetPassword({ token, password });
       router.replace('/login');
+    } catch {
+      // handled by resetPasswordMutation's onError toast
     } finally { setLoading(false); }
   };
 
