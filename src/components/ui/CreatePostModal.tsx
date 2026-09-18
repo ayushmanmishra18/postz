@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Pressable, TextInput, Image, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useCreatePost, useUploadImages } from '@/hooks/usePosts';
 import { useUIStore } from '@/store/uiStore';
@@ -98,19 +97,19 @@ export function CreatePostModal({ isOpen, onClose, initialContent = '', initialI
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className={tw`fixed inset-0 z-50 bg-slate-950/45 flex flex-col`}
+      className={"fixed inset-0 z-50 bg-slate-950/45 flex flex-col"}
       style={StyleSheet.absoluteFillObject}
     >
-      <View className={tw`flex-1 bg-white dark:bg-surface-900 flex-col`}>
-        <View className={tw`flex-row items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-surface-700`}>
-          <Pressable onPress={onClose} className={tw`p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800`}>
+      <View className={"flex-1 bg-white dark:bg-surface-900 flex-col"}>
+        <View className={"flex-row items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-surface-700"}>
+          <Pressable onPress={onClose} className={"p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800"}>
             <Ionicons name="close" size={24} color="#71717a" />
           </Pressable>
-          <Text className={tw`text-lg font-semibold text-surface-900 dark:text-surface-50`}>New Thought</Text>
+          <Text className={"text-lg font-semibold text-surface-900 dark:text-surface-50"}>New Thought</Text>
           <Button
             onPress={handleSubmit}
             disabled={(!content.trim() && images.length === 0) || isSubmitting}
-            className={tw`ml-auto`}
+            className={"ml-auto"}
             size="sm"
             variant="primary"
           >
@@ -118,9 +117,9 @@ export function CreatePostModal({ isOpen, onClose, initialContent = '', initialI
           </Button>
         </View>
 
-        <View className={tw`flex-1 p-4 flex-row gap-3`}>
+        <View className={"flex-1 p-4 flex-row gap-3"}>
           <Avatar source={user?.avatar} name={user?.displayName} size="md" />
-          <View className={tw`flex-1 flex-col`}>
+          <View className={"flex-1 flex-col"}>
             <TextInput
               multiline
               placeholder="What's on your mind?"
@@ -129,20 +128,20 @@ export function CreatePostModal({ isOpen, onClose, initialContent = '', initialI
                 setContent(text);
                 setCharCount(text.length);
               }}
-              className={tw`flex-1 text-lg text-surface-900 dark:text-surface-50 placeholder:text-surface-400 min-h-[120px]`}
+              className={"flex-1 text-lg text-surface-900 dark:text-surface-50 placeholder:text-surface-400 min-h-[120px]"}
               maxLength={MAX_CHARS}
               autoFocus
             />
-            <View className={tw`mt-3 flex-row items-center justify-between`}>
-              <View className={tw`flex-row gap-2`}>
-                <Pressable onPress={pickImages} className={tw`p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800`}>
+            <View className={"mt-3 flex-row items-center justify-between"}>
+              <View className={"flex-row gap-2"}>
+                <Pressable onPress={pickImages} className={"p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800"}>
                   <Ionicons name="image-outline" size={24} color="#71717a" />
                 </Pressable>
-                <Pressable onPress={takePhoto} className={tw`p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800`}>
+                <Pressable onPress={takePhoto} className={"p-2 rounded-full active:bg-surface-100 dark:active:bg-surface-800"}>
                   <Ionicons name="camera-outline" size={24} color="#71717a" />
                 </Pressable>
               </View>
-              <Text className={tw`text-sm text-surface-500 dark:text-surface-400`}>
+              <Text className={"text-sm text-surface-500 dark:text-surface-400"}>
                 {charCount}/{MAX_CHARS}
               </Text>
             </View>
@@ -150,17 +149,17 @@ export function CreatePostModal({ isOpen, onClose, initialContent = '', initialI
         </View>
 
         {images.length > 0 && (
-          <View className={tw`px-4 pb-4`}>
-            <View className={tw`flex-row gap-2 overflow-x-auto pb-2`}>
+          <View className={"px-4 pb-4"}>
+            <View className={"flex-row gap-2 overflow-x-auto pb-2"}>
               {images.map((image, index) => (
-                <View key={index} className={tw`relative w-24 h-24 flex-shrink-0`}>
+                <View key={index} className={"relative w-24 h-24 flex-shrink-0"}>
                   <Image
                     source={{ uri: image }}
-                    className={tw`w-full h-full rounded-lg bg-cover`}
+                    className={"w-full h-full rounded-lg bg-cover"}
                   />
                   <Pressable
                     onPress={() => removeImage(index)}
-                    className={tw`absolute top-1 right-1 p-1 rounded-full bg-black/50`}
+                    className={"absolute top-1 right-1 p-1 rounded-full bg-black/50"}
                   >
                     <Ionicons name="close" size={16} color="white" />
                   </Pressable>

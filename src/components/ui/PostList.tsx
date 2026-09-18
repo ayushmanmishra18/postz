@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, FlatList } from 'react-native';
-import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { Post } from '@/types';
 import { PostCard } from './PostCard';
@@ -36,14 +35,14 @@ export function PostList({
 }: PostListProps) {
   if (posts.length === 0) {
     return (
-      <View className={tw`flex-1 items-center justify-center py-12 px-4 ${className}`}>
+      <View className={`flex-1 items-center justify-center py-12 px-4 ${className}`}>
         {ListEmptyComponent || (
-          <View className={tw`items-center gap-4`}>
+          <View className={"items-center gap-4"}>
             <Ionicons name="document-text-outline" size={64} color="#a1a1aa" />
-            <Text className={tw`text-surface-500 dark:text-surface-400 text-center text-lg`}>
+            <Text className={"text-surface-500 dark:text-surface-400 text-center text-lg"}>
               No thoughts yet
             </Text>
-            <Text className={tw`text-surface-400 dark:text-surface-500 text-center`}>
+            <Text className={"text-surface-400 dark:text-surface-500 text-center"}>
               Be the first to share your thoughts!
             </Text>
           </View>
@@ -72,9 +71,9 @@ export function PostList({
       refreshing={refreshing}
       ListFooterComponent={
         hasMore ? (
-          <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
-            <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
-            <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
+          <View className={"py-4 flex-row items-center justify-center gap-2"}>
+            <Ionicons name="refresh" size={20} color="#71717a" className={"animate-spin"} />
+            <Text className={"text-surface-500 dark:text-surface-400 text-sm"}>Loading more...</Text>
           </View>
         ) : null
       }

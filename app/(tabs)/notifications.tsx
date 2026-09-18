@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, FlatList, RefreshControl, Pressable } from 'react-native';
-import { tw } from '@/lib/tw';
 import { Ionicons } from '@expo/vector-icons';
 import { useNotifications, useMarkAllAsRead, useMarkAsRead } from '@/hooks/useNotifications';
 import { Notification } from '@/types';
@@ -60,15 +59,15 @@ export default function NotificationsScreen() {
             markAsRead.mutate(notification._id);
           }
         }}
-        className={tw`flex-row gap-4 p-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 ${!notification.isRead ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`}
+        className={`flex-row gap-4 p-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-700 ${!notification.isRead ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`}
       >
         <Avatar source={actor?.avatar} name={actor?.displayName} size="md" />
-        <View className={tw`flex-1 min-w-0`}>
-          <Text className={tw`text-surface-900 dark:text-surface-50`}>
-            <Text className={tw`font-semibold`}>{actor?.displayName}</Text>{' '}
+        <View className={"flex-1 min-w-0"}>
+          <Text className={"text-surface-900 dark:text-surface-50"}>
+            <Text className={"font-semibold"}>{actor?.displayName}</Text>{' '}
             {getNotificationContent()}
           </Text>
-          <Text className={tw`text-sm text-surface-500 dark:text-surface-400 mt-1`}>{timeAgo}</Text>
+          <Text className={"text-sm text-surface-500 dark:text-surface-400 mt-1"}>{timeAgo}</Text>
           {notification.post && (
             <PostCard
               post={notification.post as any}
@@ -78,7 +77,7 @@ export default function NotificationsScreen() {
           )}
         </View>
         {!notification.isRead && (
-          <View className={tw`w-2 h-2 rounded-full bg-primary-600 mt-6`} />
+          <View className={"w-2 h-2 rounded-full bg-primary-600 mt-6"} />
         )}
       </Pressable>
     );
@@ -87,20 +86,20 @@ export default function NotificationsScreen() {
 
   if (isLoading && notifications.length === 0) {
     return (
-      <View className={tw`flex-1 items-center justify-center`}>
-        <Ionicons name="refresh" size={32} color="#0ea5e9" className={tw`animate-spin`} />
+      <View className={"flex-1 items-center justify-center"}>
+        <Ionicons name="refresh" size={32} color="#0ea5e9" className={"animate-spin"} />
       </View>
     );
   }
 
   if (notifications.length === 0) {
     return (
-      <View className={tw`flex-1 items-center justify-center px-4`}>
+      <View className={"flex-1 items-center justify-center px-4"}>
         <Ionicons name="notifications-outline" size={64} color="#a1a1aa" />
-        <Text className={tw`mt-4 text-lg font-medium text-surface-600 dark:text-surface-400 text-center`}>
+        <Text className={"mt-4 text-lg font-medium text-surface-600 dark:text-surface-400 text-center"}>
           No notifications yet
         </Text>
-        <Text className={tw`mt-2 text-surface-500 dark:text-surface-400 text-center`}>
+        <Text className={"mt-2 text-surface-500 dark:text-surface-400 text-center"}>
           When you get notifications, they'll appear here
         </Text>
       </View>
@@ -108,11 +107,11 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <SafeAreaView edges={['top']} className={tw`flex-1 bg-slate-50 dark:bg-slate-950`}>
-      <View className={tw`flex-row items-center justify-between px-5 py-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800`}>
+    <SafeAreaView edges={['top']} className={"flex-1 bg-slate-50 dark:bg-slate-950"}>
+      <View className={"flex-row items-center justify-between px-5 py-4 bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800"}>
 
-        <View><Text className={tw`text-2xl font-bold text-slate-900 dark:text-white`}>Notifications</Text><Text className={tw`text-xs text-surface-500 mt-1`}>{notifications.filter(n => !n.isRead).length} unread</Text></View>
-        <Pressable onPress={() => markAllAsRead.mutate()} className={tw`px-3 py-2 rounded-xl bg-primary-50 dark:bg-primary-900/20`}><Text className={tw`text-sm font-semibold text-primary-700`}>Mark all read</Text></Pressable>
+        <View><Text className={"text-2xl font-bold text-slate-900 dark:text-white"}>Notifications</Text><Text className={"text-xs text-surface-500 mt-1"}>{notifications.filter(n => !n.isRead).length} unread</Text></View>
+        <Pressable onPress={() => markAllAsRead.mutate()} className={"px-3 py-2 rounded-xl bg-primary-50 dark:bg-primary-900/20"}><Text className={"text-sm font-semibold text-primary-700"}>Mark all read</Text></Pressable>
       </View>
       <FlatList
         data={Object.entries(groupedNotifications)}
@@ -121,8 +120,8 @@ export default function NotificationsScreen() {
           const [date, items] = item;
           return (
             <View>
-              <View className={tw`px-4 py-3 bg-surface-100 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-700`}>
-                <Text className={tw`text-sm font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wide`}>
+              <View className={"px-4 py-3 bg-surface-100 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-700"}>
+                <Text className={"text-sm font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wide"}>
                   {date === new Date().toDateString() ? 'Today' : date === new Date(Date.now() - 86400000).toDateString() ? 'Yesterday' : date}
                 </Text>
               </View>
@@ -140,9 +139,9 @@ export default function NotificationsScreen() {
         refreshing={isLoading}
         ListFooterComponent={
           hasNextPage ? (
-            <View className={tw`py-4 flex-row items-center justify-center gap-2`}>
-              <Ionicons name="refresh" size={20} color="#71717a" className={tw`animate-spin`} />
-              <Text className={tw`text-surface-500 dark:text-surface-400 text-sm`}>Loading more...</Text>
+            <View className={"py-4 flex-row items-center justify-center gap-2"}>
+              <Ionicons name="refresh" size={20} color="#71717a" className={"animate-spin"} />
+              <Text className={"text-surface-500 dark:text-surface-400 text-sm"}>Loading more...</Text>
             </View>
           ) : null
         }

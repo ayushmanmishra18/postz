@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
@@ -59,9 +60,17 @@ export default function SignupScreen() {
   };
 
   return (
-    <View className="flex-1 bg-slate-50 dark:bg-slate-950">
-      <View className="flex-1 p-6 justify-center">
-        <View className="max-w-md mx-auto w-full">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        className="flex-1 p-6"
+      >
+        <View className="flex-1 justify-center max-w-md mx-auto w-full">
           <View className="text-center mb-10">
             <View className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 mb-4">
               <Ionicons name="chatbubbles" size={36} color="white" />
@@ -149,7 +158,8 @@ export default function SignupScreen() {
             </Pressable>
           </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }

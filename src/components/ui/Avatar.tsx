@@ -1,6 +1,5 @@
 import React from 'react';
 import { Image, View, Text, ImageSourcePropType } from 'react-native';
-import { tw } from '@/lib/tw';
 
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof View> {
   source?: string | { uri: string } | null;
@@ -66,21 +65,21 @@ export const Avatar = React.forwardRef<View, AvatarProps>(
     const bgColor = name ? getColorFromName(name) : 'bg-surface-300 dark:bg-surface-600';
 
     return (
-      <View ref={ref} className={tw`relative inline-flex ${className}`} style={style} {...props}>
+      <View ref={ref} className={`relative inline-flex ${className}`} style={style} {...props}>
         {source ? (
           <Image
             source={typeof source === 'string' ? { uri: source } : source as ImageSourcePropType}
-            className={tw`${sizeClass} ${shapeClass} bg-cover`}
+            className={`${sizeClass} ${shapeClass} bg-cover`}
             style={{ borderRadius: shape === 'circle' ? 9999 : 12 }}
           />
         ) : (
-          <View className={tw`${sizeClass} ${shapeClass} ${bgColor} items-center justify-center flex-shrink-0`}>
-            <Text className={tw`text-white font-semibold`}>{name ? getInitials(name) : '?'}</Text>
+          <View className={`${sizeClass} ${shapeClass} ${bgColor} items-center justify-center flex-shrink-0`}>
+            <Text className={"text-white font-semibold"}>{name ? getInitials(name) : '?'}</Text>
           </View>
         )}
         {status && (
           <View
-            className={tw`
+            className={`
               absolute bottom-0 right-0 border-2 border-white dark:border-surface-900 ${shape === 'circle' ? 'rounded-full' : 'rounded-lg'}
               ${statusSizes[size]} ${statusColors[status]}
             `}

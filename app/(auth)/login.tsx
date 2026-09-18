@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'expo-router';
@@ -27,9 +28,17 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className="flex-1 bg-slate-50 dark:bg-slate-950">
-      <View className="flex-1 p-6 justify-center">
-        <View className="max-w-md mx-auto w-full">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        className="flex-1 p-6"
+      >
+        <View className="flex-1 justify-center max-w-md mx-auto w-full">
 
           <View className="items-center mb-10">
             <View className="items-center justify-center w-20 h-20 rounded-2xl bg-primary-600 mb-4">
@@ -120,7 +129,8 @@ export default function LoginScreen() {
           </View>
 
         </View>
-      </View>
-    </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }

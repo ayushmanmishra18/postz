@@ -1,6 +1,5 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet } from 'react-native';
-import { tw } from '@/lib/tw';
 import { useId } from 'react';
 
 interface InputProps extends React.ComponentPropsWithoutRef<typeof TextInput> {
@@ -33,18 +32,18 @@ export const Input = React.forwardRef<TextInput, InputProps>(
     const helperId = `${id}-helper`;
 
     return (
-      <View className={tw`w-full ${containerClassName}`}>
+      <View className={`w-full ${containerClassName}`}>
         {label && (
           <Text
             id={`${id}-label`}
-            className={tw`block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5`}
+            className={"block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1.5"}
           >
             {label}
           </Text>
         )}
-        <View className={tw`relative`}>
+        <View className={"relative"}>
           {leftIcon && (
-            <View className={tw`absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-500`}>
+            <View className={"absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-500"}>
               {leftIcon}
             </View>
           )}
@@ -52,7 +51,7 @@ export const Input = React.forwardRef<TextInput, InputProps>(
             ref={ref}
             id={id}
             secureTextEntry={secureTextEntry}
-            className={tw`
+            className={`
               w-full
               px-4 py-3
               bg-white dark:bg-surface-900
@@ -75,18 +74,18 @@ export const Input = React.forwardRef<TextInput, InputProps>(
             {...props}
           />
           {rightIcon && (
-            <View className={tw`absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-500`}>
+            <View className={"absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-500"}>
               {rightIcon}
             </View>
           )}
         </View>
         {error && (
-          <Text id={errorId} className={tw`mt-1.5 text-sm text-red-600 dark:text-red-400`} role="alert">
+          <Text id={errorId} className={"mt-1.5 text-sm text-red-600 dark:text-red-400"} role="alert">
             {error}
           </Text>
         )}
         {helperText && !error && (
-          <Text id={helperId} className={tw`mt-1.5 text-sm text-surface-500 dark:text-surface-400`}>
+          <Text id={helperId} className={"mt-1.5 text-sm text-surface-500 dark:text-surface-400"}>
             {helperText}
           </Text>
         )}
